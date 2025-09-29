@@ -15,14 +15,24 @@ import { API_BASE_URL } from "@/lib/config"
 
 export default function GraduationNameChangePage() {
   const { toast } = useToast()
-  const [selectedRequest, setSelectedRequest] = useState(null)
+  interface NameChangeReq {
+    _id?: string
+    studentId: string
+    oldName: string
+    newName: string
+    reason: string
+    status: "Pending" | "Approved" | "Rejected" | string
+    supportingDocs?: string[]
+  }
+
+  const [selectedRequest, setSelectedRequest] = useState<NameChangeReq | null>(null)
   const [isViewOpen, setIsViewOpen] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
-  const [requests, setRequests] = useState([])
-  const [filteredData, setFilteredData] = useState([])
+  const [requests, setRequests] = useState<NameChangeReq[]>([])
+  const [filteredData, setFilteredData] = useState<NameChangeReq[]>([])
   const [activeTab, setActiveTab] = useState("all")
-  const [newRequest, setNewRequest] = useState({
+  const [newRequest, setNewRequest] = useState<{ studentId: string; oldName: string; newName: string; reason: string; supportingDocs: File[] | string[] }>({
     studentId: "",
     oldName: "",
     newName: "",
@@ -42,21 +52,22 @@ export default function GraduationNameChangePage() {
   }
 
   const handleSearch = () => {
+    const q = searchTerm.toLowerCase()
     const filtered = requests.filter((item) =>
-      item.oldName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.newName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.studentId.toLowerCase().includes(searchTerm.toLowerCase())
+      (item.oldName || "").toLowerCase().includes(q) ||
+      (item.newName || "").toLowerCase().includes(q) ||
+      (item.studentId || "").toLowerCase().includes(q)
     )
     setFilteredData(filtered)
   }
 
-  const handleTabChange = (value) => {
+  const handleTabChange = (value: string) => {
     setActiveTab(value)
     if (value === "all") setFilteredData(requests)
-    else setFilteredData(requests.filter((item) => item.status.toLowerCase() === value))
+    else setFilteredData(requests.filter((item) => (item.status || "").toLowerCase() === value))
   }
 
-  const updateStatus = async (id, status) => {
+  const updateStatus = async (id: string, status: "approve" | "reject") => {
     const res = await fetch(`${API_BASE_URL}/api/Graduationnamechangeconfirmation/${id}/${status}`, {
       method: "POST",
     })
@@ -66,7 +77,7 @@ export default function GraduationNameChangePage() {
     }
   }
 
-  const deleteRequest = async (id) => {
+  const deleteRequest = async (id: string) => {
     const res = await fetch(`${API_BASE_URL}/api/Graduationnamechangeconfirmation/${id}`, {
       method: "DELETE"
     })
@@ -78,16 +89,14 @@ export default function GraduationNameChangePage() {
     }
   }
 
-  const handleSubmitRequest = async (e) => {
+  const handleSubmitRequest = async (e: React.FormEvent) => {
     e.preventDefault()
     const formData = new FormData()
-    Object.entries(newRequest).forEach(([key, value]) => {
-      if (key === "supportingDocs") {
-        value.forEach((file) => formData.append("supportingDocs", file))
-      } else {
-        formData.append(key, value)
-      }
-    })
+    formData.append("studentId", newRequest.studentId)
+    formData.append("oldName", newRequest.oldName)
+    formData.append("newName", newRequest.newName)
+    formData.append("reason", newRequest.reason)
+    ;(newRequest.supportingDocs || []).forEach((file) => formData.append("supportingDocs", file as Blob))
 
     const res = await fetch( `${API_BASE_URL}/api/Graduationnamechangeconfirmation`, {
       method: "POST",
@@ -152,8 +161,8 @@ export default function GraduationNameChangePage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredData.map((request) => (
-                    <TableRow key={request._id}>
+                  {filteredData.map((request, index) => (
+                    <TableRow key={request._id || index}>
                       <TableCell>{request.studentId}</TableCell>
                       <TableCell>{request.oldName}</TableCell>
                       <TableCell>{request.newName}</TableCell>
@@ -167,13 +176,13 @@ export default function GraduationNameChangePage() {
                         <div className="flex gap-1">
                           {request.status === "Pending" && (
                             <>
-                              <Button size="icon" variant="ghost" onClick={() => updateStatus(request._id, "approve")}><Check className="h-4 w-4 text-green-600" /></Button>
-                              <Button size="icon" variant="ghost" onClick={() => updateStatus(request._id, "reject")}><X className="h-4 w-4 text-red-600" /></Button>
+                              <Button size="icon" variant="ghost" onClick={() => updateStatus(String(request._id || ""), "approve")}><Check className="h-4 w-4 text-green-600" /></Button>
+                              <Button size="icon" variant="ghost" onClick={() => updateStatus(String(request._id || ""), "reject")}><X className="h-4 w-4 text-red-600" /></Button>
                             </>
                           )}
                           <Button size="icon" variant="ghost" onClick={() => { setSelectedRequest(request); setIsViewOpen(true) }}><Eye className="h-4 w-4" /></Button>
                           <Button size="icon" variant="ghost" onClick={() => { setSelectedRequest(request); setIsEditOpen(true) }}><Edit className="h-4 w-4" /></Button>
-                          <Button size="icon" variant="ghost" onClick={() => deleteRequest(request._id)}><Trash className="h-4 w-4" /></Button>
+                          <Button size="icon" variant="ghost" onClick={() => deleteRequest(String(request._id || ""))}><Trash className="h-4 w-4" /></Button>
                         </div>
                       </TableCell>
                     </TableRow>

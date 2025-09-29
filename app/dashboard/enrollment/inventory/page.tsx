@@ -25,10 +25,12 @@ import { API_BASE_URL } from "@/lib/config"
 export default function InventoryPage() {
   const { toast } = useToast()
   const [searchTerm, setSearchTerm] = useState("")
-  const [inventoryItems, setInventoryItems] = useState([])
-  const [purchaseOrders, setPurchaseOrders] = useState([])
-  const [filteredInventory, setFilteredInventory] = useState([])
-  const [filteredPO, setFilteredPO] = useState([])
+  interface InventoryItem { _id?: string; name: string; category: string; quantity: string | number; price: string | number; supplier: string; description?: string }
+  interface PurchaseOrder { _id?: string; supplier: string; items: string; quantity: string; totalAmount: string; expectedDelivery: string; notes?: string }
+  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([])
+  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([])
+  const [filteredInventory, setFilteredInventory] = useState<InventoryItem[]>([])
+  const [filteredPO, setFilteredPO] = useState<PurchaseOrder[]>([])
   const [activeTab, setActiveTab] = useState("inventory")
   const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false)
   const [isAddPODialogOpen, setIsAddPODialogOpen] = useState(false)
@@ -72,7 +74,7 @@ export default function InventoryPage() {
       const data = await res.json()
       setInventoryItems(data)
       setFilteredInventory(data)
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to fetch inventory:", error)
     }
   }
@@ -83,7 +85,7 @@ export default function InventoryPage() {
       const data = await res.json()
       setPurchaseOrders(data)
       setFilteredPO(data)
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to fetch purchase orders:", error)
     }
   }
@@ -106,9 +108,10 @@ export default function InventoryPage() {
       } else {
         toast({ title: "Failed to add item", variant: "destructive" })
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Error adding item:", err)
-      toast({ title: "Error", description: err.message, variant: "destructive" })
+      const msg = err instanceof Error ? err.message : String(err)
+      toast({ title: "Error", description: msg, variant: "destructive" })
     }
   }
 
@@ -130,23 +133,24 @@ export default function InventoryPage() {
       } else {
         toast({ title: "Failed to create order", variant: "destructive" })
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Error creating PO:", err)
-      toast({ title: "Error", description: err.message, variant: "destructive" })
+      const msg = err instanceof Error ? err.message : String(err)
+      toast({ title: "Error", description: msg, variant: "destructive" })
     }
   }
 
   const handleInventorySearch = () => {
-    const filtered = inventoryItems.filter(
-      (item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.supplier.toLowerCase().includes(searchTerm.toLowerCase())
+    const q = searchTerm.toLowerCase()
+    const filtered = inventoryItems.filter((item) =>
+      (item.name || "").toLowerCase().includes(q) ||
+      (item.category || "").toLowerCase().includes(q) ||
+      (item.supplier || "").toLowerCase().includes(q)
     )
     setFilteredInventory(filtered)
   }
 
-  const filterInventoryByCategory = (category) => {
+  const filterInventoryByCategory = (category: string) => {
     if (category === "all") {
       setFilteredInventory(inventoryItems)
     } else {
@@ -154,7 +158,7 @@ export default function InventoryPage() {
     }
   }
 
-  const handleTabChange = (tab) => setActiveTab(tab)
+  const handleTabChange = (tab: string) => setActiveTab(tab)
 
   return (
     <div className="p-6">
@@ -229,7 +233,7 @@ export default function InventoryPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredInventory.map((item, i) => (
-                    <TableRow key={i}>
+                    <TableRow key={item._id || i}>
                       <TableCell>{item.name}</TableCell>
                       <TableCell>{item.category}</TableCell>
                       <TableCell>{item.quantity}</TableCell>
@@ -262,7 +266,7 @@ export default function InventoryPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredPO.map((po, i) => (
-                    <TableRow key={i}>
+                    <TableRow key={po._id || i}>
                       <TableCell>{po.supplier}</TableCell>
                       <TableCell>{po.items}</TableCell>
                       <TableCell>{po.quantity}</TableCell>
