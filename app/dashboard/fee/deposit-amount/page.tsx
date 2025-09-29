@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import axios from "axios"
+import { API_BASE_URL } from "@/lib/config"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -14,18 +15,19 @@ import { Textarea } from "@/components/ui/textarea"
 export default function DepositAmountPage() {
   const [studentId, setStudentId] = useState("")
   const [studentDetails, setStudentDetails] = useState<any>(null)
-  const [cashForm, setCashForm] = useState({
+  interface CashForm { amount: string; date: string; transactionId: string; receivedBy: string; remarks: string }
+  const [cashForm, setCashForm] = useState<CashForm>({
     amount: "",
     date: "",
     transactionId: "",
     receivedBy: "",
-    remarks: ""
+    remarks: "",
   })
 
   const handleStudentSearch = async () => {
     if (studentId) {
       try {
-        const res = await axios.get(` http://localhost:4000/api/admissions/students/${studentId}`)
+        const res = await axios.get(`${API_BASE_URL}/api/admissions/students/${studentId}`)
         setStudentDetails(res.data)
       } catch (error) {
         console.error("Error fetching student details:", error)
@@ -61,7 +63,7 @@ export default function DepositAmountPage() {
         receivedBy: cashForm.receivedBy
       }
 
-      await axios.post( "http://localhost:4000/api/deposit", payload)
+      await axios.post( `${API_BASE_URL}/api/deposit`, payload)
       alert("Deposit saved successfully!")
       setCashForm({ amount: "", date: "", transactionId: "", receivedBy: "", remarks: "" })
     } catch (err) {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import axios from "axios"
+import { API_BASE_URL } from "@/lib/config"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -20,17 +21,32 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 
 export default function AdmissionStatusPage() {
+  interface Admission {
+    _id?: string
+    id?: string
+    admissionId?: string
+    studentId: string
+    name: string
+    course: string
+    batch: string
+    admissionDate?: string
+    feeStatus: "Paid" | "Partially Paid" | "Unpaid" | string
+    documentStatus: "Complete" | "Pending" | string
+    enrollmentStatus: "Enrolled" | "Provisional" | "Pending" | string
+    notes?: string
+  }
+
   const [searchTerm, setSearchTerm] = useState("")
-  const [admissionData, setAdmissionData] = useState([])
-  const [filteredData, setFilteredData] = useState([])
-  const [selectedAdmission, setSelectedAdmission] = useState(null)
+  const [admissionData, setAdmissionData] = useState<Admission[]>([])
+  const [filteredData, setFilteredData] = useState<Admission[]>([])
+  const [selectedAdmission, setSelectedAdmission] = useState<Admission | null>(null)
   const [isViewOpen, setIsViewOpen] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
 
   useEffect(() => {
     const fetchAdmissionData = async () => {
       try {
-        const response = await axios.get( "http://localhost:4000/api/admissions")
+        const response = await axios.get( `${API_BASE_URL}/api/admissions`)
         setAdmissionData(response.data)
         setFilteredData(response.data)
       } catch (error) {
@@ -41,12 +57,12 @@ export default function AdmissionStatusPage() {
   }, [])
 
   const handleSearch = () => {
-    const filtered = admissionData.filter(
-      (item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.studentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.course.toLowerCase().includes(searchTerm.toLowerCase())
+    const q = searchTerm.toLowerCase()
+    const filtered = admissionData.filter((item) =>
+      (item.name || "").toLowerCase().includes(q) ||
+      (item.id || item.admissionId || "").toLowerCase().includes(q) ||
+      (item.studentId || "").toLowerCase().includes(q) ||
+      (item.course || "").toLowerCase().includes(q)
     )
     setFilteredData(filtered)
   }
@@ -156,9 +172,9 @@ export default function AdmissionStatusPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredData.map((admission: any, index: number) => (
-                <TableRow key={admission.id || index}>
-                  <TableCell>{admission.admissionId}</TableCell>
+              {filteredData.map((admission, index) => (
+                <TableRow key={admission.id || admission.admissionId || index}>
+                  <TableCell>{admission.admissionId || admission.id}</TableCell>
                   <TableCell>{admission.studentId}</TableCell>
                   <TableCell>{admission.name}</TableCell>
                   <TableCell>{admission.course}</TableCell>
@@ -236,7 +252,7 @@ export default function AdmissionStatusPage() {
           </DialogHeader>
           {selectedAdmission && (
             <div className="space-y-2">
-              <p><strong>ID:</strong> {selectedAdmission.id}</p>
+              <p><strong>ID:</strong> {selectedAdmission.id || selectedAdmission.admissionId}</p>
               <p><strong>Student ID:</strong> {selectedAdmission.studentId}</p>
               <p><strong>Name:</strong> {selectedAdmission.name}</p>
               <p><strong>Course:</strong> {selectedAdmission.course}</p>
@@ -263,13 +279,13 @@ export default function AdmissionStatusPage() {
           {selectedAdmission && (
             <div className="space-y-4">
               <Label>Name</Label>
-              <Input value={selectedAdmission.name} onChange={(e) => setSelectedAdmission({ ...selectedAdmission, name: e.target.value })} />
+              <Input value={selectedAdmission.name} onChange={(e) => setSelectedAdmission(prev => prev ? { ...prev, name: e.target.value } : prev)} />
               <Label>Course</Label>
-              <Input value={selectedAdmission.course} onChange={(e) => setSelectedAdmission({ ...selectedAdmission, course: e.target.value })} />
+              <Input value={selectedAdmission.course} onChange={(e) => setSelectedAdmission(prev => prev ? { ...prev, course: e.target.value } : prev)} />
               <Label>Batch</Label>
-              <Input value={selectedAdmission.batch} onChange={(e) => setSelectedAdmission({ ...selectedAdmission, batch: e.target.value })} />
+              <Input value={selectedAdmission.batch} onChange={(e) => setSelectedAdmission(prev => prev ? { ...prev, batch: e.target.value } : prev)} />
               <Label>Notes</Label>
-              <Textarea value={selectedAdmission.notes || ""} onChange={(e) => setSelectedAdmission({ ...selectedAdmission, notes: e.target.value })} rows={3} />
+              <Textarea value={selectedAdmission.notes || ""} onChange={(e) => setSelectedAdmission(prev => prev ? { ...prev, notes: e.target.value } : prev)} rows={3} />
             </div>
           )}
           <DialogFooter>
@@ -277,9 +293,11 @@ export default function AdmissionStatusPage() {
             <Button
               onClick={async () => {
                 try {
-                  await axios.put(` http://localhost:4000/api/admissions/${selectedAdmission.id}`, selectedAdmission)
+                  if (!selectedAdmission) return
+                  const sid = selectedAdmission.id || selectedAdmission.admissionId
+                  await axios.put(`${API_BASE_URL}/api/admissions/${sid}`, selectedAdmission)
                   setIsEditOpen(false)
-                  const res = await axios.get( "http://localhost:4000/api/admissions")
+                  const res = await axios.get( `${API_BASE_URL}/api/admissions`)
                   setAdmissionData(res.data)
                   setFilteredData(res.data)
                 } catch (err) {

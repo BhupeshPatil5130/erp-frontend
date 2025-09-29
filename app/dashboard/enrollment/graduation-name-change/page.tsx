@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Search, FileDown, Filter, Eye, Check, X, Edit, Trash } from "lucide-react"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useToast } from "@/hooks/use-toast"
+import { API_BASE_URL } from "@/lib/config"
 
 export default function GraduationNameChangePage() {
   const { toast } = useToast()
@@ -34,7 +35,7 @@ export default function GraduationNameChangePage() {
   }, [])
 
   const fetchRequests = async () => {
-    const res = await fetch( "http://localhost:4000/api/Graduationnamechangeconfirmation")
+    const res = await fetch( `${API_BASE_URL}/api/Graduationnamechangeconfirmation`)
     const data = await res.json()
     setRequests(data)
     setFilteredData(data)
@@ -56,7 +57,7 @@ export default function GraduationNameChangePage() {
   }
 
   const updateStatus = async (id, status) => {
-    const res = await fetch(` http://localhost:4000/api/Graduationnamechangeconfirmation/${id}/${status}`, {
+    const res = await fetch(`${API_BASE_URL}/api/Graduationnamechangeconfirmation/${id}/${status}`, {
       method: "POST",
     })
     if (res.ok) {
@@ -66,7 +67,7 @@ export default function GraduationNameChangePage() {
   }
 
   const deleteRequest = async (id) => {
-    const res = await fetch(` http://localhost:4000/api/Graduationnamechangeconfirmation/${id}`, {
+    const res = await fetch(`${API_BASE_URL}/api/Graduationnamechangeconfirmation/${id}`, {
       method: "DELETE"
     })
     if (res.ok) {
@@ -88,7 +89,7 @@ export default function GraduationNameChangePage() {
       }
     })
 
-    const res = await fetch( "http://localhost:4000/api/Graduationnamechangeconfirmation", {
+    const res = await fetch( `${API_BASE_URL}/api/Graduationnamechangeconfirmation`, {
       method: "POST",
       body: formData
     })
@@ -202,7 +203,7 @@ export default function GraduationNameChangePage() {
           <strong>Supporting Documents:</strong>
           <ul className="list-disc list-inside space-y-2">
             {(selectedRequest.supportingDocs || []).map((doc, index) => {
-              const fileUrl = ` http://localhost:4000/${doc.replace(/^.*?uploads[\\/]/, "uploads/")}`
+              const fileUrl = `${API_BASE_URL}/${doc.replace(/^.*?uploads[\\/]/, "uploads/")}`
 
               const isImage = /\.(jpg|jpeg|png)$/i.test(doc)
               const isPdf = /\.pdf$/i.test(doc)
@@ -261,7 +262,7 @@ export default function GraduationNameChangePage() {
               <DialogFooter>
                 <Button variant="outline" onClick={() => setIsEditOpen(false)}>Cancel</Button>
                 <Button type="button" onClick={async () => {
-                  const res = await fetch(` http://localhost:4000/api/Graduationnamechangeconfirmation/${selectedRequest._id}`, {
+                  const res = await fetch(`${API_BASE_URL}/api/Graduationnamechangeconfirmation/${selectedRequest._id}`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(selectedRequest)

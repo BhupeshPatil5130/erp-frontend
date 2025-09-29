@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Bell, Menu } from "lucide-react";
 import axios from "axios";
+import { API_BASE_URL } from "@/lib/config";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +25,7 @@ export function MainHeader() {
   /* fetch user once */
   useEffect(() => {
     axios
-      .get( "http://localhost:4000/api/profile", { withCredentials: true })
+      .get( `${API_BASE_URL}/api/profile`, { withCredentials: true })
       .then((res) => {
         setUserName(res.data.name);
         setUserRole(res.data.role || "User");

@@ -26,6 +26,7 @@ import {
   Search, FileDown, Eye, Plus, ShoppingCart, Check, Trash, Edit as Pencil,
 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { API_BASE_URL } from "@/lib/config"
 
 /* ---------------- types ---------------- */
 type Status = "Pending" | "Shipped" | "Delivered" | "Cancelled"
@@ -53,7 +54,7 @@ interface PurchaseOrder {
 }
 
 /* ---------------- helpers ---------------- */
-const API = process.env.NEXT_PUBLIC_API_BASE ||  "http://localhost:4000/api"
+const API = `${API_BASE_URL}/api`
 const api = (p: string, o: RequestInit = {}) =>
   fetch(`${API}${p}`, { credentials: "include", ...o })
 
@@ -290,7 +291,7 @@ export default function PurchaseOrderPage() {
                 <TableBody>
                   {suppliers.map(s=>(
                     <TableRow key={s._id}>
-                      <TableCell>{s.supplierId}</TableCell>
+                      <TableCell>{s.id}</TableCell>
                       <TableCell>{s.name}</TableCell>
                       <TableCell>{s.contact}</TableCell>
                       <TableCell>{s.email}</TableCell>

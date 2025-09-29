@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import axios from "axios"
+import { API_BASE_URL } from "@/lib/config"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -60,11 +61,13 @@ const instructorOptions = [
 
 export default function DTPViewPage() {
   const { toast } = useToast()
+  interface Student { _id: string; studentId: string; name: string; course: string; batch: string }
+  interface DTP { _id?: string; id?: string; studentId: string; name: string; course: string; batch: string; startDate: string; endDate: string; instructor: string; notes?: string }
   const [searchTerm, setSearchTerm] = useState("")
-  const [filteredData, setFilteredData] = useState([])
-  const [dtpData, setDtpData] = useState([])
-  const [students, setStudents] = useState([])
-  const [selectedDTP, setSelectedDTP] = useState(null)
+  const [filteredData, setFilteredData] = useState<DTP[]>([])
+  const [dtpData, setDtpData] = useState<DTP[]>([])
+  const [students, setStudents] = useState<Student[]>([])
+  const [selectedDTP, setSelectedDTP] = useState<DTP | null>(null)
   const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false)
   const [newDTP, setNewDTP] = useState({
     studentId: "",
@@ -84,7 +87,7 @@ export default function DTPViewPage() {
 
   const fetchStudents = async () => {
     try {
-      const res = await axios.get( "http://localhost:4000/api/admissions/students")
+      const res = await axios.get( `${API_BASE_URL}/api/admissions/students`)
       setStudents(res.data)
     } catch (error) {
       console.error("Failed to fetch students:", error)
@@ -93,7 +96,7 @@ export default function DTPViewPage() {
 
   const fetchDtpData = async () => {
     try {
-      const res = await axios.get( "http://localhost:4000/api/dtp")
+      const res = await axios.get( `${API_BASE_URL}/api/dtp`)
       setDtpData(res.data)
       setFilteredData(res.data)
     } catch (error) {
@@ -102,19 +105,19 @@ export default function DTPViewPage() {
   }
 
   const handleSearch = () => {
-    const filtered = dtpData.filter(
-      (item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.studentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.course.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.instructor.toLowerCase().includes(searchTerm.toLowerCase())
+    const q = searchTerm.toLowerCase()
+    const filtered = dtpData.filter((item) =>
+      (item.name || "").toLowerCase().includes(q) ||
+      (item.studentId || "").toLowerCase().includes(q) ||
+      (item.course || "").toLowerCase().includes(q) ||
+      (item.instructor || "").toLowerCase().includes(q)
     )
     setFilteredData(filtered)
   }
 
   const handleScheduleDTP = async () => {
     try {
-      await axios.post( "http://localhost:4000/api/dtp", newDTP)
+      await axios.post( `${API_BASE_URL}/api/dtp`, newDTP)
       toast({
         title: "DTP Scheduled",
         description: `DTP for ${newDTP.name} has been scheduled.`,

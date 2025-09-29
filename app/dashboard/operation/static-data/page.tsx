@@ -22,8 +22,9 @@ import {
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
 import { Search, Plus, Edit as Pencil, Trash2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { API_BASE_URL } from "@/lib/config"
 
-const API = process.env.NEXT_PUBLIC_API_BASE ||  "http://localhost:4000/api"
+const API = `${API_BASE_URL}/api`
 
 const api = <T,>(url: string, init?: RequestInit) =>
   fetch(`${API}${url}`, { credentials: "include", ...init }).then((r) =>

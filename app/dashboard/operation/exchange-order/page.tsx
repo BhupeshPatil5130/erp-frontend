@@ -15,6 +15,7 @@ import {
   CheckCircle, XCircle, Plus
 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { API_BASE_URL } from "@/lib/config"
 
 type Status = "Pending" | "Approved" | "Completed" | "Rejected"
 
@@ -51,7 +52,7 @@ export default function ExchangeOrderPage() {
   const [form, setForm] = useState<ExchangeOrder>(blank)
 
   /* ─────────────── API base ─────────────── */
-  const API = process.env.NEXT_PUBLIC_API_BASE ||  "http://localhost:4000/api"
+  const API = `${API_BASE_URL}/api`
 
   /* ─────────────── helpers ─────────────── */
   const badge = (s: Status) =>

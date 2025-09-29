@@ -24,9 +24,10 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { API_BASE_URL } from "@/lib/config";
 
 /* ───────── API helper ───────── */
-const API = process.env.NEXT_PUBLIC_API_BASE ||  "http://localhost:4000/api";
+const API = `${API_BASE_URL}/api`;
 const api = (p: string, o: RequestInit = {}) =>
   fetch(`${API}${p}`, {
     credentials: "include",

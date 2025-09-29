@@ -1,4 +1,5 @@
 // This file contains all API service functions for the ERP system
+import { API_BASE_URL } from "@/lib/config"
 
 // Mock data for dashboard
 export const getDashboardData = async () => {
@@ -149,7 +150,7 @@ const enquiryData = [
 // Enquiry API functions
 export const getEnquiries = async () => {
   try {
-    const res = await fetch( "http://localhost:4000/api/enquiries", {
+    const res = await fetch( `${API_BASE_URL}/api/enquiries`, {
       credentials: "include",
     })
     const data = await res.json()
@@ -166,7 +167,7 @@ export const getEnquiries = async () => {
 }
 export const getEnquiryCount = async () => {
   try {
-    const res = await fetch( "http://localhost:4000/api/enquiries", {
+    const res = await fetch( `${API_BASE_URL}/api/enquiries`, {
       credentials: "include",
     })
     const data = await res.json()

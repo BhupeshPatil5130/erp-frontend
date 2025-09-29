@@ -19,6 +19,7 @@ import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import axios from "axios"
+import { API_BASE_URL } from "@/lib/config"
 
 export default function NewEnquiryPage() {
   const router = useRouter()
@@ -70,7 +71,7 @@ export default function NewEnquiryPage() {
       const fullEmail = formData.email + formData.emailDomain
       const enquiryData = { ...formData, email: fullEmail }
 
-      const response = await axios.post( "http://localhost:4000/api/enquiries", enquiryData, {
+      const response = await axios.post( `${API_BASE_URL}/api/enquiries`, enquiryData, {
         withCredentials: true,
       })
 

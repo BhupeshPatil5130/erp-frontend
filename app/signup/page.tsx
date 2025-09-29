@@ -4,6 +4,7 @@ import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { API_BASE_URL } from "@/lib/config"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -42,7 +43,7 @@ export default function SignupPage() {
     }
 
     try {
-      const response = await fetch( "http://localhost:4000/api/signup", {
+      const response = await fetch( `${API_BASE_URL}/api/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

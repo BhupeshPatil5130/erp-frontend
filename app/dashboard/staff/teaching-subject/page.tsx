@@ -18,9 +18,10 @@ import {
   DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import { Search, Eye, Plus, BookOpen, Pencil, Trash } from "lucide-react";
+import { API_BASE_URL } from "@/lib/config";
 
 /* ───────── small API helper ───────── */
-const API  = process.env.NEXT_PUBLIC_API_BASE ||  "http://localhost:4000/api";
+const API  = `${API_BASE_URL}/api`;
 const api  = (p: string, o: RequestInit = {}) =>
   fetch(`${API}${p}`, { headers:{ "Content-Type":"application/json" }, ...o })
     .then(r => (r.ok ? r.json() : Promise.reject(r.statusText)));

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { API_BASE_URL } from "@/lib/config"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -12,13 +13,12 @@ import { useToast } from "@/hooks/use-toast"
 
 export default function DepositStatusPage() {
   const { toast } = useToast()
-  const [depositData, setDepositData] = useState([])
   const [filteredData, setFilteredData] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
 
   const fetchDeposits = async () => {
     try {
-      const res = await fetch( "http://localhost:4000/api/deposit")
+      const res = await fetch(`${API_BASE_URL}/api/deposit`)
       const data = await res.json()
       setDepositData(data)
       setFilteredData(data)

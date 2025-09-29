@@ -20,22 +20,35 @@ import {
 } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
+import { API_BASE_URL } from "@/lib/config"
 
 // Stage options
 const stageOptions = ["Admission", "Enrollment", "Course Allocation", "Fee Payment", "Class Assignment", "Graduation"]
 
 export default function TransferStagePage() {
   const { toast } = useToast()
-  const [transferData, setTransferData] = useState([])
+  interface Transfer {
+    _id?: string
+    id?: string
+    studentId: string
+    name: string
+    currentStage: string
+    nextStage: string
+    requestDate?: string
+    status: "Pending" | "Approved" | "Rejected" | string
+    notes?: string
+  }
+
+  const [transferData, setTransferData] = useState<Transfer[]>([])
   const [searchTerm, setSearchTerm] = useState("")
-  const [filteredData, setFilteredData] = useState([])
+  const [filteredData, setFilteredData] = useState<Transfer[]>([])
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false)
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false)
-  const [selectedTransfer, setSelectedTransfer] = useState<any>(null)
+  const [selectedTransfer, setSelectedTransfer] = useState<Transfer | null>(null)
   const [newTransfer, setNewTransfer] = useState({
     studentId: "",
     name: "",
@@ -50,7 +63,7 @@ export default function TransferStagePage() {
 
   const handleAddTransfer = async () => {
     try {
-      const res = await fetch( "http://localhost:4000/api/transfers", {
+      const res = await fetch( `${API_BASE_URL}/api/transfers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newTransfer),
@@ -60,13 +73,15 @@ export default function TransferStagePage() {
       fetchTransfers()
       setIsAddDialogOpen(false)
       setNewTransfer({ studentId: "", name: "", currentStage: "", nextStage: "", notes: "" })
-    } catch (err) {
-      toast({ title: "Add Failed", description: err.message, variant: "destructive" })
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      toast({ title: "Add Failed", description: msg, variant: "destructive" })
     }
   }
   const handleEditTransfer = async () => {
     try {
-      const res = await fetch(` http://localhost:4000/api/transfers/${selectedTransfer._id}`, {
+      if (!selectedTransfer?._id) return
+      const res = await fetch(`${API_BASE_URL}/api/transfers/${selectedTransfer._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(selectedTransfer),
@@ -75,26 +90,30 @@ export default function TransferStagePage() {
       toast({ title: "Updated", description: `${selectedTransfer.name} has been updated.` })
       fetchTransfers()
       setIsEditDialogOpen(false)
-    } catch (err) {
-      toast({ title: "Update Failed", description: err.message, variant: "destructive" })
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      toast({ title: "Update Failed", description: msg, variant: "destructive" })
     }
   }
   const handleDeleteTransfer = async () => {
     try {
-      const res = await fetch(` http://localhost:4000/api/transfers/${selectedTransfer._id}`, {
+      if (!selectedTransfer?._id) return
+      const res = await fetch(`${API_BASE_URL}/api/transfers/${selectedTransfer._id}`, {
         method: "DELETE"
       })
       if (!res.ok) throw new Error("Failed to delete transfer request")
       toast({ title: "Deleted", description: `${selectedTransfer.name} has been deleted.` })
       fetchTransfers()
       setIsDeleteDialogOpen(false)
-    } catch (err) {
-      toast({ title: "Delete Failed", description: err.message, variant: "destructive" })
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      toast({ title: "Delete Failed", description: msg, variant: "destructive" })
     }
   }
   const handleApproveTransfer = async () => {
     try {
-      const res = await fetch(` http://localhost:4000/api/transfers/${selectedTransfer._id}/approve`, {
+      if (!selectedTransfer?._id) return
+      const res = await fetch(`${API_BASE_URL}/api/transfers/${selectedTransfer._id}/approve`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ notes: selectedTransfer.notes }),
@@ -103,13 +122,15 @@ export default function TransferStagePage() {
       toast({ title: "Approved", description: `${selectedTransfer.name}'s transfer was approved.` })
       fetchTransfers()
       setIsApproveDialogOpen(false)
-    } catch (err) {
-      toast({ title: "Approve Failed", description: err.message, variant: "destructive" })
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      toast({ title: "Approve Failed", description: msg, variant: "destructive" })
     }
   } 
   const handleRejectTransfer = async () => {
     try {
-      const res = await fetch(` http://localhost:4000/api/transfers/${selectedTransfer._id}/reject`, {
+      if (!selectedTransfer?._id) return
+      const res = await fetch(`${API_BASE_URL}/api/transfers/${selectedTransfer._id}/reject`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ notes: selectedTransfer.notes }),
@@ -118,41 +139,43 @@ export default function TransferStagePage() {
       toast({ title: "Rejected", description: `${selectedTransfer.name}'s transfer was rejected.` })
       fetchTransfers()
       setIsRejectDialogOpen(false)
-    } catch (err) {
-      toast({ title: "Reject Failed", description: err.message, variant: "destructive" })
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      toast({ title: "Reject Failed", description: msg, variant: "destructive" })
     }
   }
   const fetchTransfers = async () => {
     try {
-      const res = await fetch( "http://localhost:4000/api/transfers")
+      const res = await fetch( `${API_BASE_URL}/api/transfers`)
       const data = await res.json()
       setTransferData(data)
       setFilteredData(data)
-    } catch (err) {
-      toast({ title: "Fetch Error", description: err.message, variant: "destructive" })
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      toast({ title: "Fetch Error", description: msg, variant: "destructive" })
     }
   }
 
   const handleSearch = () => {
-    const filtered = transferData.filter(
-      (item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.studentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.currentStage.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.nextStage.toLowerCase().includes(searchTerm.toLowerCase())
+    const q = searchTerm.toLowerCase()
+    const filtered = transferData.filter((item) =>
+      (item.name || "").toLowerCase().includes(q) ||
+      String(item._id || item.id || "").toLowerCase().includes(q) ||
+      (item.studentId || "").toLowerCase().includes(q) ||
+      (item.currentStage || "").toLowerCase().includes(q) ||
+      (item.nextStage || "").toLowerCase().includes(q)
     )
     setFilteredData(filtered)
   }
 
   const filterByCurrentStage = (stage: string) => {
     if (stage === "all") setFilteredData(transferData)
-    else setFilteredData(transferData.filter((item) => item.currentStage.toLowerCase() === stage.toLowerCase()))
+    else setFilteredData(transferData.filter((item) => (item.currentStage || "").toLowerCase() === stage.toLowerCase()))
   }
 
   const filterByStatus = (status: string) => {
     if (status === "all") setFilteredData(transferData)
-    else setFilteredData(transferData.filter((item) => item.status.toLowerCase() === status.toLowerCase()))
+    else setFilteredData(transferData.filter((item) => (item.status || "").toLowerCase() === status.toLowerCase()))
   }
 
   // update rest of CRUD to use the same fetch logic...
@@ -326,13 +349,13 @@ export default function TransferStagePage() {
             </TableHeader>
             <TableBody>
               {filteredData.map((transfer) => (
-                <TableRow key={transfer.id}>
-                  <TableCell>{transfer.id}</TableCell>
+                <TableRow key={transfer._id || transfer.id}>
+                  <TableCell>{transfer.id || transfer._id}</TableCell>
                   <TableCell>{transfer.studentId}</TableCell>
                   <TableCell>{transfer.name}</TableCell>
                   <TableCell>{transfer.currentStage}</TableCell>
                   <TableCell>{transfer.nextStage}</TableCell>
-                  <TableCell>{transfer.requestDate}</TableCell>
+                  <TableCell>{transfer.requestDate || "-"}</TableCell>
                   <TableCell>
                     <div
                       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${

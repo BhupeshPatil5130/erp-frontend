@@ -23,6 +23,7 @@ import {
   SelectItem
 } from "@/components/ui/select"
 import { Building2, LogIn } from "lucide-react"
+import { API_BASE_URL } from "@/lib/config"
 console.log("✅ NEXT_PUBLIC_API_URL →", process.env.NEXT_PUBLIC_API_URL)
 
 export default function LoginPage() {
@@ -41,7 +42,7 @@ export default function LoginPage() {
     }
 
     try {
-      const response = await fetch( "http://localhost:4000/api/login", {
+      const response = await fetch( `${API_BASE_URL}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

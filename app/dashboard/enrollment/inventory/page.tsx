@@ -20,6 +20,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
+import { API_BASE_URL } from "@/lib/config"
 
 export default function InventoryPage() {
   const { toast } = useToast()
@@ -67,7 +68,7 @@ export default function InventoryPage() {
 
   const fetchInventory = async () => {
     try {
-      const res = await fetch( "http://localhost:4000/api/inventory")
+      const res = await fetch( `${API_BASE_URL}/api/inventory`)
       const data = await res.json()
       setInventoryItems(data)
       setFilteredInventory(data)
@@ -78,7 +79,7 @@ export default function InventoryPage() {
 
   const fetchPurchaseOrders = async () => {
     try {
-      const res = await fetch( "http://localhost:4000/api/purchase-orders")
+      const res = await fetch( `${API_BASE_URL}/api/purchase-orders`)
       const data = await res.json()
       setPurchaseOrders(data)
       setFilteredPO(data)
@@ -89,7 +90,7 @@ export default function InventoryPage() {
 
   const handleAddItem = async () => {
     try {
-      const res = await fetch( "http://localhost:4000/api/inventory", {
+      const res = await fetch( `${API_BASE_URL}/api/inventory`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -113,7 +114,7 @@ export default function InventoryPage() {
 
   const handleAddPO = async () => {
     try {
-      const res = await fetch( "http://localhost:4000/api/purchase-orders", {
+      const res = await fetch( `${API_BASE_URL}/api/purchase-orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
