@@ -62,9 +62,45 @@ export default function DashboardPage() {
   const [userName, setUserName] = useState<string>("")
   const [lsqEnquiryCount, setLsqEnquiryCount] = useState(0)
   const [grossAdmissionCount, setGrossAdmissionCount] = useState(0)
-  const [chartData, setChartData] = useState([])
+  const [chartData, setChartData] = useState<any[]>([])
 
   useEffect(() => {
+    const defaultEnquiryPieData: any[] = [
+      { name: "Playgroup", value: 45, count: 120, fill: "#f97316" },
+      { name: "Nursery", value: 30, count: 80, fill: "#fb923c" },
+      { name: "Euro Junior", value: 15, count: 40, fill: "#ea580c" },
+      { name: "Euro Senior", value: 10, count: 25, fill: "#c2410c" },
+    ]
+
+    const defaultAdmissionPieData: any[] = [
+      { name: "Playgroup", value: 50, count: 100, fill: "#f97316" },
+      { name: "Nursery", value: 25, count: 50, fill: "#fb923c" },
+      { name: "Euro Junior", value: 15, count: 30, fill: "#ea580c" },
+      { name: "Euro Senior", value: 10, count: 20, fill: "#c2410c" },
+    ]
+
+    const defaultEnrollmentTrendsData = [
+      { month: "Jan", playGroup: 30, nursery: 22, euroJunior: 15, euroSenior: 10 },
+      { month: "Feb", playGroup: 35, nursery: 24, euroJunior: 18, euroSenior: 12 },
+      { month: "Mar", playGroup: 40, nursery: 28, euroJunior: 20, euroSenior: 14 },
+      { month: "Apr", playGroup: 38, nursery: 26, euroJunior: 19, euroSenior: 13 },
+      { month: "May", playGroup: 42, nursery: 30, euroJunior: 21, euroSenior: 16 },
+    ]
+
+    const defaultFeeCollectionData = [
+      { month: "Jan", amount: 120000 },
+      { month: "Feb", amount: 150000 },
+      { month: "Mar", amount: 140000 },
+      { month: "Apr", amount: 160000 },
+      { month: "May", amount: 175000 },
+    ]
+
+    const defaultEnquiryTableData = [
+      { id: "ENQ-101", reportDate: "2025-04-01", quantity: 12, status: "Open", remarks: "Initial enquiry", asOn: "2025-04-02" },
+      { id: "ENQ-102", reportDate: "2025-04-03", quantity: 8, status: "In Progress", remarks: "Follow-up", asOn: "2025-04-04" },
+      { id: "ENQ-103", reportDate: "2025-04-05", quantity: 5, status: "Closed", remarks: "Converted", asOn: "2025-04-06" },
+    ]
+
     const fetchAdmissionChartData = async () => {
       try {
         const response = await axios.get( `${API_BASE_URL}/api/admissions/admission-stats`)
@@ -72,11 +108,18 @@ export default function DashboardPage() {
           ...prev,
           charts: {
             ...prev?.charts,
-            admissionData: response.data || [],
+            admissionData: Array.isArray(response.data) && response.data.length > 0 ? response.data : defaultAdmissionPieData,
           },
         }))
       } catch (error) {
         console.error("Error fetching admission chart data:", error)
+        setDashboardData((prev: any) => ({
+          ...prev,
+          charts: {
+            ...prev?.charts,
+            admissionData: defaultAdmissionPieData,
+          },
+        }))
       }
     };
 
@@ -95,7 +138,11 @@ export default function DashboardPage() {
         if (enquiryRes?.data?.count !== undefined) setEnquiryCount(enquiryRes.data.count)
         if (lsqRes?.data?.count !== undefined) setLsqEnquiryCount(lsqRes.data.count)
         if (admissionRes?.data?.count !== undefined) setGrossAdmissionCount(admissionRes.data.count)
-        if (chartRes?.data) setChartData(chartRes.data)
+        if (Array.isArray(chartRes?.data) && chartRes.data.length > 0) {
+          setChartData(chartRes.data)
+        } else {
+          setChartData(defaultEnquiryPieData)
+        }
 
         setUserName(userRes.data.name)
 
@@ -107,9 +154,27 @@ export default function DashboardPage() {
             lsqEnquiry: lsqRes?.data?.count ?? 0,
             admission: admissionRes?.data?.count ?? 0,
           },
+          charts: {
+            ...prev?.charts,
+            enrollmentTrendsData: prev?.charts?.enrollmentTrendsData ?? defaultEnrollmentTrendsData,
+            feeCollectionData: prev?.charts?.feeCollectionData ?? defaultFeeCollectionData,
+            enquiryData: prev?.charts?.enquiryData ?? defaultEnquiryTableData,
+          }
         }))
       } catch (err) {
         console.error("Error fetching dashboard data:", err)
+        // Set safe defaults so UI remains functional
+        setChartData(defaultEnquiryPieData)
+        setDashboardData((prev: any) => ({
+          ...prev,
+          charts: {
+            ...prev?.charts,
+            enrollmentTrendsData: defaultEnrollmentTrendsData,
+            feeCollectionData: defaultFeeCollectionData,
+            enquiryData: defaultEnquiryTableData,
+            admissionData: prev?.charts?.admissionData ?? defaultAdmissionPieData,
+          }
+        }))
       } finally {
         setLoading(false)
       }
@@ -144,22 +209,22 @@ export default function DashboardPage() {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="flex flex-col items-center gap-2">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
           <p className="text-sm text-muted-foreground">Loading dashboard data...</p>
         </div>
       </div>
     )
   }
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-orange-300 p-4 rounded-md">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Welcome, {userName ? `Mr. ${userName}` : "User"} 👍
+            Welcome, {userName ? `Mr. ${userName}` : "Partners to your Own ERP Tool"}  
           </h1>
           <p className="text-muted-foreground">Today is {currentDate}</p>
         </div>
-        <Button onClick={() => router.push("/dashboard/enrollment/enquiry/new")}>+ New Enquiry</Button>
+       {/* <Button onClick={() => router.push("/dashboard/enrollment/enquiry/new")}>+ New Enquiry</Button> */}
       </div>
       {/* Core Modules Section */}
       {/* <div>
@@ -187,13 +252,13 @@ export default function DashboardPage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
           {/* Row 1 */}
           <Card
-            className="bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-blue-500"
+            className="bg-white shadow-sm hover:shadow-md hover:bg-orange-50 transition-colors cursor-pointer border-l-4 border-l-orange-500"
             onClick={() => handleCardClick("/dashboard/enrollment/enquiry", "Enquiry")}
           >
             <CardContent className="p-3">
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-sm font-medium">Enquiry</h3>
-                <Users className="h-4 w-4 text-amber-500" />
+                <Users className="h-4 w-4 text-orange-500" />
               </div>
               <p className="text-lg font-bold">{enquiryCount.toLocaleString()}</p>
 
@@ -201,65 +266,65 @@ export default function DashboardPage() {
           </Card>
 
           <Card
-            className="bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-blue-500"
+            className="bg-white shadow-sm hover:shadow-md hover:bg-orange-50 transition-colors cursor-pointer border-l-4 border-l-orange-500"
             onClick={() => handleCardClick("/dashboard/enrollment/lsq-enquiry", "LSQ Enquiry")}
           >
             <CardContent className="p-3">
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-sm font-medium">LSQ Enquiry</h3>
-                <FileText className="h-4 w-4 text-blue-500" />
+                <FileText className="h-4 w-4 text-orange-500" />
               </div>
               <p className="text-lg font-bold">{lsqEnquiryCount.toLocaleString()}</p>
             </CardContent>
           </Card>
 
           <Card
-            className="bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-blue-500"
+            className="bg-white shadow-sm hover:shadow-md hover:bg-orange-50 transition-colors cursor-pointer border-l-4 border-l-orange-500"
             onClick={() => handleCardClick("/dashboard/enrollment/admission", "Gross Admission")}
           >
             <CardContent className="p-3">
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-sm font-medium">Gross Admission</h3>
-                <BookOpen className="h-4 w-4 text-blue-500" />
+                <BookOpen className="h-4 w-4 text-orange-500" />
               </div>
               <p className="text-lg font-bold">{grossAdmissionCount.toLocaleString()}</p>
             </CardContent>
           </Card>
 
           <Card
-            className="bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-blue-500"
+            className="bg-white shadow-sm hover:shadow-md hover:bg-orange-50 transition-colors cursor-pointer border-l-4 border-l-orange-500"
             onClick={() => handleCardClick("/dashboard/enrollment/admission-status", "Quit")}
           >
             <CardContent className="p-3">
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-sm font-medium">Quit</h3>
-                <AlertCircle className="h-4 w-4 text-green-500" />
+                <AlertCircle className="h-4 w-4 text-orange-500" />
               </div>
               <p className="text-lg font-bold"> {dashboardData?.metrics?.quit != null ? dashboardData.metrics.quit.toLocaleString() : "0"}</p>
             </CardContent>
           </Card>
 
           <Card
-            className="bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-blue-500"
+            className="bg-white shadow-sm hover:shadow-md hover:bg-orange-50 transition-colors cursor-pointer border-l-4 border-l-orange-500"
             onClick={() => handleCardClick("/dashboard/enrollment/transfer-stage", "Transfer In")}
           >
             <CardContent className="p-3">
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-sm font-medium">Transfer In</h3>
-                <Users className="h-4 w-4 text-amber-500" />
+                <Users className="h-4 w-4 text-orange-500" />
               </div>
               <p className="text-lg font-bold"> {dashboardData?.metrics?.quit != null ? dashboardData.metrics.quit.toLocaleString() : "0"}</p>
             </CardContent>
           </Card>
 
           <Card
-            className="bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-blue-500"
+            className="bg-white shadow-sm hover:shadow-md hover:bg-orange-50 transition-colors cursor-pointer border-l-4 border-l-orange-500"
             onClick={() => handleCardClick("/dashboard/enrollment/transfer-stage", "Transfer Out")}
           >
             <CardContent className="p-3">
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-sm font-medium">Transfer Out</h3>
-                <FileText className="h-4 w-4 text-blue-500" />
+                <FileText className="h-4 w-4 text-orange-500" />
               </div>
               <p className="text-lg font-bold"> {dashboardData?.metrics?.quit != null ? dashboardData.metrics.quit.toLocaleString() : "0"}</p>
             </CardContent>
@@ -267,78 +332,78 @@ export default function DashboardPage() {
 
           {/* Row 2 */}
           <Card
-            className="bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-blue-500"
+            className="bg-white shadow-sm hover:shadow-md hover:bg-orange-50 transition-colors cursor-pointer border-l-4 border-l-orange-500"
             onClick={() => handleCardClick("/dashboard/fee/deposit-status", "FCR Deposited")}
           >
             <CardContent className="p-3">
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-sm font-medium">FCR Deposited</h3>
-                <DollarSign className="h-4 w-4 text-blue-500" />
+                <DollarSign className="h-4 w-4 text-orange-500" />
               </div>
               <p className="text-lg font-bold"> {dashboardData?.metrics?.quit != null ? dashboardData.metrics.quit.toLocaleString() : "0"}</p>
             </CardContent>
           </Card>
 
           <Card
-            className="bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-blue-500"
+            className="bg-white shadow-sm hover:shadow-md hover:bg-orange-50 transition-colors cursor-pointer border-l-4 border-l-orange-500"
             onClick={() => handleCardClick("/dashboard/fee/deposit-status", "FCR Pending")}
           >
             <CardContent className="p-3">
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-sm font-medium">FCR Pending</h3>
-                <AlertCircle className="h-4 w-4 text-green-500" />
+                <AlertCircle className="h-4 w-4 text-orange-500" />
               </div>
               <p className="text-lg font-bold"> {dashboardData?.metrics?.quit != null ? dashboardData.metrics.quit.toLocaleString() : "0"}</p>
             </CardContent>
           </Card>
 
           <Card
-            className="bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-blue-500"
+            className="bg-white shadow-sm hover:shadow-md hover:bg-orange-50 transition-colors cursor-pointer border-l-4 border-l-orange-500"
             onClick={() => handleCardClick("/dashboard/fee/payment-detail", "Payment Due")}
           >
             <CardContent className="p-3">
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-sm font-medium">Payment Due</h3>
-                <Users className="h-4 w-4 text-amber-500" />
+                <Users className="h-4 w-4 text-orange-500" />
               </div>
               <p className="text-lg font-bold"> {dashboardData?.metrics?.quit != null ? dashboardData.metrics.quit.toLocaleString() : "0"}</p>
             </CardContent>
           </Card>
 
           <Card
-            className="bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-blue-500"
+            className="bg-white shadow-sm hover:shadow-md hover:bg-orange-50 transition-colors cursor-pointer border-l-4 border-l-orange-500"
             onClick={() => handleCardClick("/dashboard/account/soa-details", "Receivable")}
           >
             <CardContent className="p-3">
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-sm font-medium">Receivable</h3>
-                <FileText className="h-4 w-4 text-blue-500" />
+                <FileText className="h-4 w-4 text-orange-500" />
               </div>
               <p className="text-lg font-bold">₹{dashboardData?.metrics?.quit != null ? dashboardData.metrics.quit.toLocaleString() : "0"}</p>
             </CardContent>
           </Card>
 
           <Card
-            className="bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-blue-500"
+            className="bg-white shadow-sm hover:shadow-md hover:bg-orange-50 transition-colors cursor-pointer border-l-4 border-l-orange-500"
             onClick={() => handleCardClick("/dashboard/fee/deposit-amount", "Collection")}
           >
             <CardContent className="p-3">
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-sm font-medium">Collection</h3>
-                <Receipt className="h-4 w-4 text-purple-500" />
+                <Receipt className="h-4 w-4 text-orange-500" />
               </div>
               <p className="text-lg font-bold">₹{dashboardData?.metrics?.quit != null ? dashboardData.metrics.quit.toLocaleString() : "0"}</p>
             </CardContent>
           </Card>
 
           <Card
-            className="bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-blue-500"
+            className="bg-white shadow-sm hover:shadow-md hover:bg-orange-50 transition-colors cursor-pointer border-l-4 border-l-orange-500"
             onClick={() => handleCardClick("/dashboard/fee/discount-type", "Credit Note")}
           >
             <CardContent className="p-3">
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-sm font-medium">Credit Note</h3>
-                <CreditCard className="h-4 w-4 text-green-500" />
+                <CreditCard className="h-4 w-4 text-orange-500" />
               </div>
               <p className="text-lg font-bold">₹{(dashboardData?.metrics?.creditNote / 100000).toFixed(2)}L</p>
             </CardContent>
@@ -347,18 +412,18 @@ export default function DashboardPage() {
       </div>
 
       {/* navigation tab */}
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
+      <Tabs defaultValue="EnquiriesAdmissions" className="space-y-4">
+        <TabsList className="bg-orange-100">
+          <TabsTrigger value="EnquiriesAdmissions">Enquiries & Admissions </TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="reports">Reports</TabsTrigger>
           <TabsTrigger value="fee-structure">Fee Structure</TabsTrigger>
         </TabsList>
         {/* navigation tab */}
 
-        <TabsContent value="overview" className="space-y-4">
+        <TabsContent value="EnquiriesAdmissions" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
-            <Card>
+            <Card className="bg-orange-50 border border-orange-200">
               <CardContent className="pt-6">
                 <h3 className="text-lg font-semibold mb-4">Enquiries by Program</h3>
                 <div className="h-[300px]">
@@ -371,11 +436,11 @@ export default function DashboardPage() {
                         labelLine={true}
                         label={({ name, percent, value }) => `${name} ${(percent * 100).toFixed(0)}% (${value})`}
                         outerRadius={80}
-                        fill="#8884d8"
+                        fill="#f97316"
                         dataKey="value"
                       >
                         {chartData.map((entry: any, index: number) => (
-                          <Cell key={`cell-${index}`} fill={entry.fill || "#8884d8"} />
+                          <Cell key={`cell-${index}`} fill={entry.fill || "#f97316"} />
                         ))}
                       </Pie>
                       <Tooltip content={<CustomTooltip />} />
@@ -386,7 +451,7 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-orange-50 border border-orange-200">
             <CardContent className="pt-6">
   <h3 className="text-lg font-semibold mb-4">Admissions by Program</h3>
 
@@ -406,7 +471,7 @@ export default function DashboardPage() {
             }
           >
             {dashboardData.charts.admissionData.map((entry: any, index: number) => (
-              <Cell key={`cell-${index}`} fill={entry.fill || "#8884d8"} />
+              <Cell key={`cell-${index}`} fill={entry.fill || "#f97316"} />
             ))}
           </Pie>
           <Tooltip />
@@ -435,7 +500,7 @@ export default function DashboardPage() {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">
-          <Card>
+          <Card className="bg-orange-50 border border-orange-200">
             <CardContent className="pt-6">
               <h3 className="text-lg font-semibold mb-4">Enrollment Trends</h3>
               <div className="h-[400px]">
@@ -454,10 +519,10 @@ export default function DashboardPage() {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="playGroup" name="Play Group" fill="#3b82f6" />
-                    <Bar dataKey="nursery" name="Nursery" fill="#1e3a8a" />
-                    <Bar dataKey="euroJunior" name="Euro Junior" fill="#84cc16" />
-                    <Bar dataKey="euroSenior" name="Euro Senior" fill="#b91c1c" />
+                    <Bar dataKey="playGroup" name="Play Group" fill="#fb923c" />
+                    <Bar dataKey="nursery" name="Nursery" fill="#f97316" />
+                    <Bar dataKey="euroJunior" name="Euro Junior" fill="#ea580c" />
+                    <Bar dataKey="euroSenior" name="Euro Senior" fill="#c2410c" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -476,7 +541,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-orange-50 border border-orange-200">
             <CardContent className="pt-6">
               <h3 className="text-lg font-semibold mb-4">Fee Collection Trends</h3>
               <div className="h-[300px]">
@@ -499,7 +564,7 @@ export default function DashboardPage() {
                       type="monotone"
                       dataKey="amount"
                       name="Fee Collection"
-                      stroke="#3b82f6"
+                      stroke="#f97316"
                       activeDot={{ r: 8 }}
                     />
                   </LineChart>
@@ -510,13 +575,13 @@ export default function DashboardPage() {
         </TabsContent>
 
         <TabsContent value="reports" className="space-y-4">
-          <Card>
+          <Card className="bg-orange-50 border border-orange-200">
             <CardContent className="pt-6">
               <h3 className="text-lg font-semibold mb-4">Shortage Damage Order</h3>
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="bg-muted">
+                    <tr className="bg-orange-100">
                       <th className="border px-4 py-2 text-left">Number</th>
                       <th className="border px-4 py-2 text-left">Report Date</th>
                       <th className="border px-4 py-2 text-left">Quantity</th>
@@ -557,16 +622,16 @@ export default function DashboardPage() {
         </TabsContent>
 
         <TabsContent value="fee-structure" className="space-y-4">
-          <Card>
+          <Card className="bg-orange-50 border border-orange-200">
             <CardContent className="pt-6">
               <h3 className="text-lg font-semibold mb-4">Fee Rate Card (Offline)</h3>
 
               <div className="mb-6">
-                <div className="bg-muted p-2 font-medium">Euro Junior (ApprovedByAllIndiaBM)</div>
+                <div className="bg-orange-100 p-2 font-medium">Euro Junior (ApprovedByAllIndiaBM)</div>
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-muted/50">
+                      <tr className="bg-orange-50">
                         <th className="border px-4 py-2 text-left">Fee Description</th>
                         <th className="border px-4 py-2 text-right">Rate</th>
                         <th className="border px-4 py-2 text-right">Royalty Percentage</th>
@@ -574,15 +639,15 @@ export default function DashboardPage() {
                     </thead>
                     <tbody>
                       {dashboardData?.feeStructure?.euroJunior.map((fee: any, index: number) => (
-                        <tr key={index} className="bg-green-50">
+                        <tr key={index} className="bg-orange-50">
                           <td className="border px-4 py-2">{fee.description}</td>
                           <td className="border px-4 py-2 text-right">{fee.rate}</td>
                           <td className="border px-4 py-2 text-right">{fee.royaltyPercentage}</td>
                         </tr>
                       ))}
-                      <tr className="bg-green-50">
-                        <td className="border px-4 py-2 font-medium text-green-600">Total Fee</td>
-                        <td className="border px-4 py-2 text-right font-medium text-green-600">
+                      <tr className="bg-orange-50">
+                        <td className="border px-4 py-2 font-medium text-orange-600">Total Fee</td>
+                        <td className="border px-4 py-2 text-right font-medium text-orange-600">
                           {dashboardData?.feeStructure?.euroJunior.reduce(
                             (total: number, fee: any) => total + fee.rate,
                             0,
@@ -596,11 +661,11 @@ export default function DashboardPage() {
               </div>
 
               <div className="mb-6">
-                <div className="bg-muted p-2 font-medium">Euro Senior (ApprovedByAllIndiaBM)</div>
+                <div className="bg-orange-100 p-2 font-medium">Euro Senior (ApprovedByAllIndiaBM)</div>
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-muted/50">
+                      <tr className="bg-orange-50">
                         <th className="border px-4 py-2 text-left">Fee Description</th>
                         <th className="border px-4 py-2 text-right">Rate</th>
                         <th className="border px-4 py-2 text-right">Royalty Percentage</th>
@@ -608,15 +673,15 @@ export default function DashboardPage() {
                     </thead>
                     <tbody>
                       {dashboardData?.feeStructure?.euroSenior.map((fee: any, index: number) => (
-                        <tr key={index} className="bg-green-50">
+                        <tr key={index} className="bg-orange-50">
                           <td className="border px-4 py-2">{fee.description}</td>
                           <td className="border px-4 py-2 text-right">{fee.rate}</td>
                           <td className="border px-4 py-2 text-right">{fee.royaltyPercentage}</td>
                         </tr>
                       ))}
-                      <tr className="bg-green-50">
-                        <td className="border px-4 py-2 font-medium text-green-600">Total Fee</td>
-                        <td className="border px-4 py-2 text-right font-medium text-green-600">
+                      <tr className="bg-orange-50">
+                        <td className="border px-4 py-2 font-medium text-orange-600">Total Fee</td>
+                        <td className="border px-4 py-2 text-right font-medium text-orange-600">
                           {dashboardData?.feeStructure?.euroSenior.reduce(
                             (total: number, fee: any) => total + fee.rate,
                             0,

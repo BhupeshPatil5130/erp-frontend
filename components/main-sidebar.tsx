@@ -9,7 +9,6 @@ import { usePathname } from "next/navigation"
 import {
   BookOpen,
   Building,
-  ChevronDown,
   ClipboardList,
   DollarSign,
   FileText,
@@ -153,13 +152,13 @@ export function MainSidebar() {
 
   const sidebar = (
     <>
-      <div className="flex h-16 items-center border-b px-4">
-        <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
-          <Building className="h-6 w-6" />
-          <span className={cn("font-bold", !isOpen && "hidden")}>ERP System</span>
+      <div className="flex h-16 items-center border-b px-4 bg-emerald-50 border-emerald-100">
+        <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-emerald-800">
+          <Building className="h-6 w-6 text-emerald-700" />
+          <span className={cn("font-semibold text-sm", !isOpen && "hidden")}>SUNOIAKIDS PRE-SCHOOL  SYSTEM</span>
         </Link>
         {isMobile && (
-          <Button variant="ghost" size="icon" className="ml-auto" onClick={() => setIsOpen(false)}>
+          <Button variant="ghost" size="icon" className="ml-auto text-emerald-700" onClick={() => setIsOpen(false)}>
             <X className="h-5 w-5" />
             <span className="sr-only">Close</span>
           </Button>
@@ -174,11 +173,11 @@ export function MainSidebar() {
                   key={index}
                   href={item.href || "#"}
                   className={cn(
-                    "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                    isActive(item.href || "") && "bg-accent text-accent-foreground",
+                    "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-amber-100 hover:text-emerald-900",
+                    isActive(item.href || "") && "bg-amber-200 text-emerald-900",
                   )}
                 >
-                  <item.icon className="h-5 w-5" />
+                  <item.icon className="h-5 w-5 text-emerald-700" />
                   <span className={cn("", !isOpen && "hidden")}>{item.title}</span>
                 </Link>
               )
@@ -189,13 +188,12 @@ export function MainSidebar() {
                 <AccordionItem value={item.title} className="border-none">
                   <AccordionTrigger
                     className={cn(
-                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground no-underline",
+                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-amber-100 hover:text-emerald-900 no-underline",
                       !isOpen && "justify-center",
                     )}
                   >
-                    <item.icon className="h-5 w-5" />
+                    <item.icon className="h-5 w-5 text-emerald-700" />
                     <span className={cn("", !isOpen && "hidden")}>{item.title}</span>
-                    <ChevronDown className={cn("h-4 w-4 shrink-0 transition-transform", !isOpen && "hidden")} />
                   </AccordionTrigger>
                   <AccordionContent className={cn(!isOpen && "hidden")}>
                     <div className="pl-4 pt-1">
@@ -204,8 +202,8 @@ export function MainSidebar() {
                           key={subIndex}
                           href={subItem.href}
                           className={cn(
-                            "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                            isActive(subItem.href) && "bg-accent text-accent-foreground",
+                            "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-amber-100 hover:text-emerald-900",
+                            isActive(subItem.href) && "bg-amber-200 text-emerald-900",
                           )}
                         >
                           <span>{subItem.title}</span>
@@ -225,7 +223,7 @@ export function MainSidebar() {
   if (isMobile) {
     return (
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetContent side="left" className="p-0 w-72">
+        <SheetContent side="left" className="p-0 w-72 bg-emerald-50">
           <div className="flex flex-col h-full">{sidebar}</div>
         </SheetContent>
       </Sheet>
@@ -235,7 +233,7 @@ export function MainSidebar() {
   return (
     <div
       className={cn(
-        "flex flex-col border-r bg-background",
+        "flex flex-col border-r bg-emerald-50 border-emerald-100",
         isOpen ? "w-64" : "w-[70px]",
         "transition-width duration-300",
       )}

@@ -153,7 +153,7 @@ export default function LandingPage() {
             </div>
           </div>
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="/" className="text-sm font-medium text-blue-600">
+            <Link href="/" className="text-sm font-medium text-orange-600">
               Home
             </Link>
             <Link href="#about" className="text-sm font-medium text-gray-500 hover:text-gray-900">
@@ -185,23 +185,23 @@ export default function LandingPage() {
               </Button>
             </Link>
             <Link href="/signup">
-              <Button size="sm">Sign up</Button>
+              <Button size="sm" className="bg-orange-600 hover:bg-orange-700">Sign up</Button>
             </Link>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-blue-50 to-white overflow-hidden">
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-orange-50 to-white overflow-hidden">
         <div className="container px-4 md:px-6 relative">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div className="flex flex-col space-y-6">
-              <Badge className="w-fit bg-blue-100 text-blue-600 hover:bg-blue-200 px-3 py-1 text-sm">
+              <Badge className="w-fit bg-orange-100 text-orange-600 hover:bg-orange-200 px-3 py-1 text-sm">
                 Educational Excellence
               </Badge>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-gray-800">
                 Empowering Schools for Success: Your Partner in{" "}
-                <span className="text-blue-600">Educational Academic Solutions</span>
+                <span className="text-orange-600">Educational Academic Solutions</span>
               </h1>
               <p className="max-w-[600px] text-gray-600 md:text-xl">
                 Enhancing Education Through Comprehensive Services. Join our growing network of educational institutions
@@ -209,7 +209,7 @@ export default function LandingPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/login">
-                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                  <Button size="lg" className="bg-orange-600 hover:bg-orange-700">
                     Get Started <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -223,8 +223,8 @@ export default function LandingPage() {
             <div className="relative hidden lg:block">
               <div className="grid grid-cols-3 grid-rows-3 gap-3">
                 <div className="col-span-1 row-span-1 rounded-lg overflow-hidden">
-                  <div className="w-full h-full bg-blue-100 flex items-center justify-center">
-                    <BookOpen className="h-10 w-10 text-blue-500" />
+                  <div className="w-full h-full bg-orange-100 flex items-center justify-center">
+                    <BookOpen className="h-10 w-10 text-orange-500" />
                   </div>
                 </div>
                 <div className="col-span-2 row-span-1 rounded-lg overflow-hidden">
@@ -233,13 +233,13 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <div className="col-span-1 row-span-2 rounded-lg overflow-hidden">
-                  <div className="w-full h-full bg-green-100 flex items-center justify-center">
-                    <Target className="h-10 w-10 text-green-500" />
+                  <div className="w-full h-full bg-amber-100 flex items-center justify-center">
+                    <Target className="h-10 w-10 text-amber-600" />
                   </div>
                 </div>
                 <div className="col-span-2 row-span-2 rounded-lg overflow-hidden">
-                  <div className="w-full h-full bg-purple-100 flex items-center justify-center">
-                    <Presentation className="h-16 w-16 text-purple-500" />
+                  <div className="w-full h-full bg-orange-200 flex items-center justify-center">
+                    <Presentation className="h-16 w-16 text-orange-700" />
                   </div>
                 </div>
               </div>
@@ -266,7 +266,7 @@ export default function LandingPage() {
         <div className="container px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="relative h-[400px] w-full rounded-xl overflow-hidden">
-              <div className="absolute inset-0 bg-blue-100 flex items-center justify-center">
+              <div className="absolute inset-0 bg-orange-100 flex items-center justify-center">
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-KYAj1gpJCO75Za0MxFyKwiezSx5kL2.png"
                   alt="Team collaboration"
@@ -276,7 +276,7 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="space-y-6">
-              <Badge className="w-fit bg-pink-100 text-pink-600 hover:bg-pink-200 px-3 py-1 text-sm">WHO ARE WE?</Badge>
+              <Badge className="w-fit bg-orange-100 text-orange-600 hover:bg-orange-200 px-3 py-1 text-sm">WHO ARE WE?</Badge>
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-800">
                 We are an education management company promoting preschools, K12 schools and Teachers Training.
               </h2>
@@ -288,7 +288,7 @@ export default function LandingPage() {
                 Founded by Prof. Suresh Bachhav and Mrs. Sushma Bachhav, the visionaries behind New Vision School, SLPL
                 aims to provide integrated and holistic education to every Indian student.
               </p>
-              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+              <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
                 <p className="font-medium">
                   Suryadhi Pvt. Ltd. introduces 'LEAFP': a unique pedagogy, ensuring an exceptional learning experience.
                 </p>
@@ -304,10 +304,10 @@ export default function LandingPage() {
       </section>
 
       {/* Our Approach Section */}
-      <section className="w-full py-12 md:py-24 bg-gradient-to-b from-gray-50 to-white">
+      <section className="w-full py-12 md:py-24 bg-gradient-to-b from-orange-50 to-white">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <Badge className="bg-green-100 text-green-600 hover:bg-green-200 px-3 py-1 text-sm">OUR APPROACH</Badge>
+            <Badge className="bg-orange-100 text-orange-600 hover:bg-orange-200 px-3 py-1 text-sm">OUR APPROACH</Badge>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gray-800">
               The LEAFP Methodology
             </h2>
@@ -317,10 +317,10 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mt-8">
-            <Card className="bg-blue-50 border-none shadow-md hover:shadow-lg transition-shadow">
+            <Card className="bg-orange-50 border-none shadow-md hover:shadow-lg transition-shadow">
               <CardHeader>
-                <div className="p-3 w-fit rounded-full bg-blue-100 mb-2">
-                  <span className="text-2xl font-bold text-blue-600">L</span>
+                <div className="p-3 w-fit rounded-full bg-orange-100 mb-2">
+                  <span className="text-2xl font-bold text-orange-600">L</span>
                 </div>
                 <CardTitle>Learning</CardTitle>
               </CardHeader>
@@ -329,10 +329,10 @@ export default function LandingPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-green-50 border-none shadow-md hover:shadow-lg transition-shadow">
+            <Card className="bg-orange-50 border-none shadow-md hover:shadow-lg transition-shadow">
               <CardHeader>
-                <div className="p-3 w-fit rounded-full bg-green-100 mb-2">
-                  <span className="text-2xl font-bold text-green-600">E</span>
+                <div className="p-3 w-fit rounded-full bg-orange-100 mb-2">
+                  <span className="text-2xl font-bold text-orange-600">E</span>
                 </div>
                 <CardTitle>Engagement</CardTitle>
               </CardHeader>
@@ -341,10 +341,10 @@ export default function LandingPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-amber-50 border-none shadow-md hover:shadow-lg transition-shadow">
+            <Card className="bg-orange-50 border-none shadow-md hover:shadow-lg transition-shadow">
               <CardHeader>
-                <div className="p-3 w-fit rounded-full bg-amber-100 mb-2">
-                  <span className="text-2xl font-bold text-amber-600">A</span>
+                <div className="p-3 w-fit rounded-full bg-orange-100 mb-2">
+                  <span className="text-2xl font-bold text-orange-600">A</span>
                 </div>
                 <CardTitle>Assessment</CardTitle>
               </CardHeader>
@@ -355,10 +355,10 @@ export default function LandingPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-purple-50 border-none shadow-md hover:shadow-lg transition-shadow">
+            <Card className="bg-orange-50 border-none shadow-md hover:shadow-lg transition-shadow">
               <CardHeader>
-                <div className="p-3 w-fit rounded-full bg-purple-100 mb-2">
-                  <span className="text-2xl font-bold text-purple-600">F</span>
+                <div className="p-3 w-fit rounded-full bg-orange-100 mb-2">
+                  <span className="text-2xl font-bold text-orange-600">F</span>
                 </div>
                 <CardTitle>Feedback</CardTitle>
               </CardHeader>
@@ -367,10 +367,10 @@ export default function LandingPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-pink-50 border-none shadow-md hover:shadow-lg transition-shadow">
+            <Card className="bg-orange-50 border-none shadow-md hover:shadow-lg transition-shadow">
               <CardHeader>
-                <div className="p-3 w-fit rounded-full bg-pink-100 mb-2">
-                  <span className="text-2xl font-bold text-pink-600">P</span>
+                <div className="p-3 w-fit rounded-full bg-orange-100 mb-2">
+                  <span className="text-2xl font-bold text-orange-600">P</span>
                 </div>
                 <CardTitle>Progress</CardTitle>
               </CardHeader>
@@ -386,7 +386,7 @@ export default function LandingPage() {
       <section id="brands" className="w-full py-12 md:py-24 bg-white">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <Badge className="bg-blue-100 text-blue-600 hover:bg-blue-200 px-3 py-1 text-sm">SURYADHI BRANDS</Badge>
+            <Badge className="bg-orange-100 text-orange-600 hover:bg-orange-200 px-3 py-1 text-sm">SURYADHI BRANDS</Badge>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gray-800">
               Explore Excellence: Unveiling our Distinctive School Brands!
             </h2>
@@ -397,7 +397,7 @@ export default function LandingPage() {
           </div>
 
           <Tabs defaultValue="all" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsList className="grid w-full grid-cols-4 mb-8 bg-orange-100">
               <TabsTrigger value="all">All Brands</TabsTrigger>
               <TabsTrigger value="preschool">Pre Schools</TabsTrigger>
               <TabsTrigger value="k12">K12 Schools</TabsTrigger>
@@ -408,7 +408,7 @@ export default function LandingPage() {
                 <BrandCard
                   title="UTOPIA : World Pre School"
                   description="A Pre School of International Standards. It acts as feeders to our CBSE & ICSE schools."
-                  color="bg-gradient-to-br from-blue-500 to-blue-600"
+                  color="bg-gradient-to-br from-orange-500 to-orange-600"
                   icon={School}
                 />
                 <BrandCard
@@ -420,7 +420,7 @@ export default function LandingPage() {
                 <BrandCard
                   title="UTOPIA : Global School"
                   description="A chain of CBSE and ICSE schools with Global Approach (Integrated Curriculum)."
-                  color="bg-gradient-to-br from-blue-500 to-blue-600"
+                  color="bg-gradient-to-br from-orange-500 to-orange-600"
                   icon={GraduationCap}
                 />
               </div>
@@ -430,7 +430,7 @@ export default function LandingPage() {
                 <BrandCard
                   title="UTOPIA : World Pre School"
                   description="A Pre School of International Standards. It acts as feeders to our CBSE & ICSE schools."
-                  color="bg-gradient-to-br from-blue-500 to-blue-600"
+                  color="bg-gradient-to-br from-orange-500 to-orange-600"
                   icon={School}
                 />
                 <BrandCard
@@ -446,7 +446,7 @@ export default function LandingPage() {
                 <BrandCard
                   title="UTOPIA : Global School"
                   description="A chain of CBSE and ICSE schools with Global Approach (Integrated Curriculum)."
-                  color="bg-gradient-to-br from-blue-500 to-blue-600"
+                  color="bg-gradient-to-br from-orange-500 to-orange-600"
                   icon={GraduationCap}
                 />
               </div>
@@ -456,7 +456,7 @@ export default function LandingPage() {
                 <BrandCard
                   title="Suryadhi Teacher Training Academy"
                   description="Comprehensive training programs for educators to enhance teaching methodologies and classroom management."
-                  color="bg-gradient-to-br from-green-500 to-green-600"
+                  color="bg-gradient-to-br from-orange-500 to-orange-600"
                   icon={BookMarked}
                 />
               </div>
@@ -466,10 +466,10 @@ export default function LandingPage() {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="w-full py-12 md:py-24 bg-blue-50">
+      <section id="services" className="w-full py-12 md:py-24 bg-orange-50">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <Badge className="bg-blue-100 text-blue-600 hover:bg-blue-200 px-3 py-1 text-sm">WHAT WE DO?</Badge>
+            <Badge className="bg-orange-100 text-orange-600 hover:bg-orange-200 px-3 py-1 text-sm">WHAT WE DO?</Badge>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gray-800">
               Empowering Education Through <br />
               Comprehensive Management Solutions for Academic Excellence
@@ -525,19 +525,19 @@ export default function LandingPage() {
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-orange-500" />
                     <span>CBSE Aligned</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-orange-500" />
                     <span>ICSE Compatible</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-orange-500" />
                     <span>NEP 2024 Ready</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-orange-500" />
                     <span>Global Standards</span>
                   </div>
                 </div>
@@ -558,26 +558,26 @@ export default function LandingPage() {
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-orange-500" />
                     <span>Admissions</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-orange-500" />
                     <span>Fee Management</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-orange-500" />
                     <span>Staff Management</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-orange-500" />
                     <span>Report Generation</span>
                   </div>
                 </div>
               </CardContent>
               <CardFooter>
                 <Link href="/login">
-                  <Button>Access ERP</Button>
+                  <Button className="bg-orange-600 hover:bg-orange-700">Access ERP</Button>
                 </Link>
               </CardFooter>
             </Card>
@@ -590,7 +590,7 @@ export default function LandingPage() {
         <div className="container px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <Badge className="w-fit bg-purple-100 text-purple-600 hover:bg-purple-200 px-3 py-1 text-sm">
+              <Badge className="w-fit bg-orange-100 text-orange-600 hover:bg-orange-200 px-3 py-1 text-sm">
                 NEP 2024
               </Badge>
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-800">
@@ -633,7 +633,7 @@ export default function LandingPage() {
               </Accordion>
 
               <div className="flex flex-col sm:flex-row gap-4 mt-4">
-                <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
+                <Button size="lg" className="bg-orange-600 hover:bg-orange-700">
                   NEP 2024 Resources
                 </Button>
                 <Button variant="outline" size="lg">
@@ -641,33 +641,33 @@ export default function LandingPage() {
                 </Button>
               </div>
             </div>
-            <div className="relative h-[500px] w-full rounded-xl overflow-hidden bg-gradient-to-r from-purple-100 to-blue-100 p-8">
+            <div className="relative h-[500px] w-full rounded-xl overflow-hidden bg-gradient-to-r from-orange-100 to-orange-200 p-8">
               <div className="h-full w-full flex flex-col justify-center">
                 <h3 className="text-2xl font-bold mb-6">Key NEP 2024 Features We Implement:</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg flex items-start space-x-3">
-                    <GraduationCap className="h-6 w-6 text-purple-600 mt-1 flex-shrink-0" />
+                    <GraduationCap className="h-6 w-6 text-orange-600 mt-1 flex-shrink-0" />
                     <div>
                       <h4 className="font-bold">Flexible Learning Paths</h4>
                       <p className="text-sm">Multiple entry and exit options for students</p>
                     </div>
                   </div>
                   <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg flex items-start space-x-3">
-                    <Globe className="h-6 w-6 text-purple-600 mt-1 flex-shrink-0" />
+                    <Globe className="h-6 w-6 text-orange-600 mt-1 flex-shrink-0" />
                     <div>
                       <h4 className="font-bold">Global Citizenship</h4>
                       <p className="text-sm">Preparing students for global challenges</p>
                     </div>
                   </div>
                   <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg flex items-start space-x-3">
-                    <BookMarked className="h-6 w-6 text-purple-600 mt-1 flex-shrink-0" />
+                    <BookMarked className="h-6 w-6 text-orange-600 mt-1 flex-shrink-0" />
                     <div>
                       <h4 className="font-bold">Interdisciplinary Learning</h4>
                       <p className="text-sm">Breaking silos between subjects</p>
                     </div>
                   </div>
                   <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg flex items-start space-x-3">
-                    <Sparkles className="h-6 w-6 text-purple-600 mt-1 flex-shrink-0" />
+                    <Sparkles className="h-6 w-6 text-orange-600 mt-1 flex-shrink-0" />
                     <div>
                       <h4 className="font-bold">Creative Thinking</h4>
                       <p className="text-sm">Fostering innovation and problem-solving</p>
@@ -681,11 +681,11 @@ export default function LandingPage() {
       </section>
 
       {/* Why Choose Us Section */}
-      <section id="why-us" className="w-full py-12 md:py-24 bg-gradient-to-b from-gray-50 to-white">
+      <section id="why-us" className="w-full py-12 md:py-24 bg-gradient-to-b from-orange-50 to-white">
         <div className="container px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="relative h-[500px] w-full rounded-xl overflow-hidden">
-              <div className="absolute inset-0 bg-blue-100 flex items-center justify-center">
+              <div className="absolute inset-0 bg-orange-100 flex items-center justify-center">
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-DmtyBdIkipQw29ykUiepii0JKLrtjM.png"
                   alt="Educational collage"
@@ -695,7 +695,7 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="space-y-6">
-              <Badge className="w-fit bg-teal-100 text-teal-600 hover:bg-teal-200 px-3 py-1 text-sm">
+              <Badge className="w-fit bg-orange-100 text-orange-600 hover:bg-orange-200 px-3 py-1 text-sm">
                 WHY CHOOSE US
               </Badge>
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-800">
@@ -708,7 +708,7 @@ export default function LandingPage() {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                <div className="bg-white p-4 rounded-lg shadow-sm border border-orange-100">
                   <div className="flex items-center space-x-3 mb-2">
                     <Award className="h-5 w-5 text-yellow-500" />
                     <h3 className="font-bold">Award-Winning Methodology</h3>
@@ -718,7 +718,7 @@ export default function LandingPage() {
                   </p>
                 </div>
 
-                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                <div className="bg-white p-4 rounded-lg shadow-sm border border-orange-100">
                   <div className="flex items-center space-x-3 mb-2">
                     <HeartHandshake className="h-5 w-5 text-red-500" />
                     <h3 className="font-bold">Dedicated Support Team</h3>
@@ -726,15 +726,15 @@ export default function LandingPage() {
                   <p className="text-sm text-gray-600">24/7 assistance for all your educational management needs</p>
                 </div>
 
-                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                <div className="bg-white p-4 rounded-lg shadow-sm border border-orange-100">
                   <div className="flex items-center space-x-3 mb-2">
-                    <BarChart className="h-5 w-5 text-blue-500" />
+                    <BarChart className="h-5 w-5 text-orange-500" />
                     <h3 className="font-bold">Data-Driven Decisions</h3>
                   </div>
                   <p className="text-sm text-gray-600">Analytics-based approach to improve educational outcomes</p>
                 </div>
 
-                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                <div className="bg-white p-4 rounded-lg shadow-sm border border-orange-100">
                   <div className="flex items-center space-x-3 mb-2">
                     <Zap className="h-5 w-5 text-orange-500" />
                     <h3 className="font-bold">Rapid Implementation</h3>
@@ -745,7 +745,7 @@ export default function LandingPage() {
 
               <div className="flex flex-col sm:flex-row gap-4 mt-6">
                 <Link href="/login">
-                  <Button size="lg" className="bg-teal-600 hover:bg-teal-700">
+                  <Button size="lg" className="bg-orange-600 hover:bg-orange-700">
                     Join Our Network
                   </Button>
                 </Link>
@@ -761,10 +761,10 @@ export default function LandingPage() {
       </section>
 
       {/* Testimonials */}
-      <section id="testimonials" className="w-full py-12 md:py-24 bg-blue-50">
+      <section id="testimonials" className="w-full py-12 md:py-24 bg-orange-50">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <Badge className="bg-yellow-100 text-yellow-600 hover:bg-yellow-200 px-3 py-1 text-sm">TESTIMONIALS</Badge>
+            <Badge className="bg-orange-100 text-orange-600 hover:bg-orange-200 px-3 py-1 text-sm">TESTIMONIALS</Badge>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gray-800">
               What Our Partners Say
             </h2>
@@ -797,15 +797,15 @@ export default function LandingPage() {
           <div className="mt-12 bg-white p-8 rounded-xl shadow-md">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="flex flex-col items-center text-center">
-                <div className="text-5xl font-bold text-blue-600 mb-2">98%</div>
+                <div className="text-5xl font-bold text-orange-600 mb-2">98%</div>
                 <p className="text-gray-600">Partner satisfaction rate</p>
               </div>
               <div className="flex flex-col items-center text-center">
-                <div className="text-5xl font-bold text-blue-600 mb-2">45+</div>
+                <div className="text-5xl font-bold text-orange-600 mb-2">45+</div>
                 <p className="text-gray-600">Educational partners nationwide</p>
               </div>
               <div className="flex flex-col items-center text-center">
-                <div className="text-5xl font-bold text-blue-600 mb-2">15+</div>
+                <div className="text-5xl font-bold text-orange-600 mb-2">15+</div>
                 <p className="text-gray-600">Years average partnership length</p>
               </div>
             </div>
@@ -863,13 +863,13 @@ export default function LandingPage() {
               </CardFooter>
             </Card>
 
-            <Card className="border-none shadow-md hover:shadow-lg transition-shadow border-t-4 border-t-blue-600">
+            <Card className="border-none shadow-md hover:shadow-lg transition-shadow border-t-4 border-t-orange-600">
               <CardHeader className="pb-2">
-                <div className="absolute -top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-xs">
+                <div className="absolute -top-4 right-4 bg-orange-600 text-white px-3 py-1 rounded-full text-xs">
                   Popular Choice
                 </div>
-                <div className="p-3 w-fit rounded-lg bg-blue-100 mb-2">
-                  <Building2 className="h-6 w-6 text-blue-600" />
+                <div className="p-3 w-fit rounded-lg bg-orange-100 mb-2">
+                  <Building2 className="h-6 w-6 text-orange-600" />
                 </div>
                 <CardTitle>K12 School Franchise</CardTitle>
                 <CardDescription>Comprehensive solution for full-fledged school operations</CardDescription>
@@ -896,7 +896,7 @@ export default function LandingPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700">Request Information</Button>
+                <Button className="w-full bg-orange-600 hover:bg-orange-700">Request Information</Button>
               </CardFooter>
             </Card>
 
@@ -935,7 +935,7 @@ export default function LandingPage() {
             </Card>
           </div>
 
-          <div className="mt-12 p-8 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl">
+          <div className="mt-12 p-8 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
                 <h3 className="text-2xl font-bold mb-4">Ready to Start Your Educational Journey?</h3>
@@ -945,7 +945,7 @@ export default function LandingPage() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link href="/login">
-                    <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                    <Button size="lg" className="bg-orange-600 hover:bg-orange-700">
                       Get Started Today
                     </Button>
                   </Link>
@@ -958,23 +958,23 @@ export default function LandingPage() {
                 <h4 className="font-bold mb-4">Franchise Benefits at a Glance</h4>
                 <ul className="space-y-2">
                   <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-orange-500 mr-2 mt-0.5" />
                     <span>Proven business model with high success rate</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-orange-500 mr-2 mt-0.5" />
                     <span>Comprehensive training and ongoing support</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-orange-500 mr-2 mt-0.5" />
                     <span>Marketing and branding assistance</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-orange-500 mr-2 mt-0.5" />
                     <span>Curriculum and teaching materials provided</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-orange-500 mr-2 mt-0.5" />
                     <span>Technology integration and digital solutions</span>
                   </li>
                 </ul>
@@ -985,7 +985,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="w-full py-12 md:py-24 bg-blue-600">
+      <section className="w-full py-12 md:py-24 bg-orange-600">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
@@ -998,12 +998,12 @@ export default function LandingPage() {
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/login">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+                <Button size="lg" className="bg-white text-orange-600 hover:bg-gray-100">
                   Get Started Today
                 </Button>
               </Link>
               <Link href="#contact">
-                <Button variant="outline" size="lg" className="text-white border-white hover:bg-blue-700">
+                <Button variant="outline" size="lg" className="text-white border-white hover:bg-orange-700">
                   Contact Us
                 </Button>
               </Link>
@@ -1028,7 +1028,7 @@ export default function LandingPage() {
 
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
-                  <MapPin className="h-5 w-5 text-blue-600 mt-1" />
+                  <MapPin className="h-5 w-5 text-orange-600 mt-1" />
                   <div>
                     <h3 className="font-bold">Head Office</h3>
                     <p className="text-gray-600">123 Education Street, Knowledge City, India</p>
@@ -1036,7 +1036,7 @@ export default function LandingPage() {
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <MessageCircle className="h-5 w-5 text-blue-600 mt-1" />
+                  <MessageCircle className="h-5 w-5 text-orange-600 mt-1" />
                   <div>
                     <h3 className="font-bold">Email Us</h3>
                     <p className="text-gray-600">info@suryadhilearning.com</p>
@@ -1044,7 +1044,7 @@ export default function LandingPage() {
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <Calendar className="h-5 w-5 text-blue-600 mt-1" />
+                  <Calendar className="h-5 w-5 text-orange-600 mt-1" />
                   <div>
                     <h3 className="font-bold">Business Hours</h3>
                     <p className="text-gray-600">Monday - Saturday: 9:00 AM - 6:00 PM</p>
@@ -1151,10 +1151,10 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="w-full py-12 md:py-24 bg-gray-50">
+      <section className="w-full py-12 md:py-24 bg-orange-50">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <Badge className="bg-violet-100 text-violet-600 hover:bg-violet-200 px-3 py-1 text-sm">
+            <Badge className="bg-orange-100 text-orange-600 hover:bg-orange-200 px-3 py-1 text-sm">
               FREQUENTLY ASKED QUESTIONS
             </Badge>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gray-800">
@@ -1221,7 +1221,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="w-full py-12 bg-gray-900">
+      <footer className="w-full py-12 bg-orange-900">
         <div className="container px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="space-y-4">
@@ -1339,7 +1339,7 @@ export default function LandingPage() {
               </ul>
             </div>
           </div>
-          <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
+          <div className="mt-12 pt-8 border-t border-orange-800 text-center text-gray-200">
             <p>© {new Date().getFullYear()} Suryadhi Learning. All rights reserved.</p>
           </div>
         </div>
@@ -1348,7 +1348,7 @@ export default function LandingPage() {
       {/* Back to Top Button */}
       <div className="fixed bottom-6 right-6">
         <Link href="#top">
-          <Button size="icon" className="rounded-full bg-blue-600 hover:bg-blue-700 h-12 w-12">
+          <Button size="icon" className="rounded-full bg-orange-600 hover:bg-orange-700 h-12 w-12">
             <ArrowRight className="h-6 w-6 rotate-270 text-white" />
             <span className="sr-only">Back to top</span>
           </Button>

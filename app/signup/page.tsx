@@ -1,8 +1,8 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { API_BASE_URL } from "@/lib/config"
 import { Button } from "@/components/ui/button"
@@ -27,12 +27,18 @@ import { Building2, UserPlus } from "lucide-react"
 
 export default function SignupPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const [institute, setInstitute] = useState("")
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+
+  useEffect(() => {
+    const q = searchParams?.get("institute") || ""
+    if (q) setInstitute(q)
+  }, [searchParams])
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -89,9 +95,10 @@ export default function SignupPage() {
                   <SelectValue placeholder="Select Institute" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="institute1">Institute One</SelectItem>
-                  <SelectItem value="institute2">Institute Two</SelectItem>
-                  <SelectItem value="institute3">Institute Three</SelectItem>
+                  <SelectItem value="playgroup">Playgroup</SelectItem>
+                  <SelectItem value="nursery">Nursery</SelectItem>
+                  <SelectItem value="sujunor">Sujunor</SelectItem>
+                  <SelectItem value="susenior">Susenior</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -1,137 +1,66 @@
 "use client"
 
-import type React from "react"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useRouter } from "next/navigation"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem
-} from "@/components/ui/select"
-import { Building2, LogIn } from "lucide-react"
-import { API_BASE_URL } from "@/lib/config"
-console.log("✅ NEXT_PUBLIC_API_URL →", process.env.NEXT_PUBLIC_API_URL)
+import { School, Building2, GraduationCap, BookOpen } from "lucide-react"
 
 export default function LoginPage() {
   const router = useRouter()
-  const [institute, setInstitute] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState<string>("")
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!institute || !email || !password) {
-      setError("All fields are required")
-      return
-    }
-
-    try {
-      const response = await fetch( `${API_BASE_URL}/api/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // Important for session cookie
-        body: JSON.stringify({
-          institute,
-          email,
-          password,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        router.push("/dashboard")
-      } else {
-        setError(data.message || "Login failed")
-      }
-    } catch (err) {
-      console.error("Login error:", err)
-      setError("An error occurred. Please try again later.")
-    }
-  }
+  const institutes = [
+    { key: "playgroup", name: "Playgroup", icon: School, color: "bg-orange-50", iconColor: "text-orange-600" },
+    { key: "nursery", name: "Nursery", icon: GraduationCap, color: "bg-emerald-50", iconColor: "text-emerald-600" },
+    { key: "sujunor", name: "Sujunor", icon: BookOpen, color: "bg-amber-50", iconColor: "text-amber-600" },
+    { key: "susenior", name: "Susenior", icon: Building2, color: "bg-slate-50", iconColor: "text-slate-600" },
+  ]
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <div className="flex items-center justify-center mb-4">
-            <Building2 className="h-12 w-12 text-primary" />
-          </div>
-          <CardTitle className="text-2xl text-center">ERP System Login</CardTitle>
-          <CardDescription className="text-center">
-            Enter your credentials to access the ERP system
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
-            {error && (
-              <div className="text-red-500 text-center mb-4">{error}</div>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="institute">Institute</Label>
-              <Select value={institute} onValueChange={setInstitute} required>
-                <SelectTrigger id="institute">
-                  <SelectValue placeholder="Select Institute" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="institute1">Institute One</SelectItem>
-                  <SelectItem value="institute2">Institute Two</SelectItem>
-                  <SelectItem value="institute3">Institute Three</SelectItem>
-                </SelectContent>
-              </Select>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-orange-50 to-white p-6">
+      <div className="w-full max-w-5xl">
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-bold tracking-tight">Select Your Institute</h1>
+          <p className="text-sm text-muted-foreground mt-1">Choose one to continue to login</p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {institutes.map((inst) => (
+            <div
+              key={inst.key}
+              role="button"
+              tabIndex={0}
+              onClick={() => router.push(`/login/${inst.key}`)}
+              onKeyDown={(e) => { if (e.key === "Enter") router.push(`/login/${inst.key}`) }}
+              className="group focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 rounded-xl"
+              aria-label={`Open ${inst.name} login`}
+            >
+              <Card
+                className={`rounded-xl shadow-sm border border-orange-200 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 ${inst.color}`}
+              >
+                <CardHeader className="items-center pt-8 pb-2">
+                  <div className={`rounded-full p-4 bg-white shadow-sm transition-transform duration-300 group-hover:scale-110`}>
+                    <inst.icon className={`h-8 w-8 ${inst.iconColor} transition-colors`} />
+                  </div>
+                </CardHeader>
+                <CardContent className="text-center pb-8">
+                  <CardTitle className="text-lg font-semibold tracking-tight">{inst.name}</CardTitle>
+                  <p className="text-xs text-muted-foreground mt-1">Click to continue</p>
+                  <div className="mt-3">
+                    <Link href={`/signup?institute=${inst.key}`} onClick={(e)=> e.stopPropagation()} className="text-xs underline text-orange-600 hover:text-orange-700">Sign up</Link>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full">
-              <LogIn className="mr-2 h-4 w-4" /> Sign In
-            </Button>
-          </form>
-        </CardContent>
-        <CardFooter className="flex flex-col space-y-2">
-          <div className="text-sm text-center text-muted-foreground">
-            Don&apos;t have an account?{" "}
-            <Link href="/signup" className="text-primary underline">
-              Sign up
-            </Link>
-          </div>
-        </CardFooter>
-      </Card>
+          ))}
+        </div>
+
+        <div className="text-center mt-10">
+          <Link href="/signup">
+            <Button variant="outline" className="transition-colors">Create an account</Button>
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }
