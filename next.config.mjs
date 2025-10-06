@@ -22,6 +22,18 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  webpack: (config, { dev, isServer }) => {
+    // Workaround for WebpackError not a constructor in Next minify plugin
+    if (!dev) {
+      if (config.optimization?.minimize) {
+        config.optimization.minimize = false
+      }
+      if (config.optimization?.minimizer) {
+        config.optimization.minimizer = []
+      }
+    }
+    return config
+  },
   experimental: {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,
