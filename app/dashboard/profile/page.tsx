@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import { API_BASE_URL } from "@/lib/config";
 import { useRouter } from "next/navigation";
 
@@ -37,9 +36,13 @@ export default function ProfilePage() {
 
   /* fetch profile on mount */
   useEffect(() => {
-    axios.get( `${API_BASE_URL}/api/profile`, { withCredentials: true })
-      .then(res => {
-        const u = res.data;
+    const loadProfile = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/profile`, {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("unauthorized");
+        const u = await res.json();
         setFormData({
           name: u.name ?? "", email: u.email ?? "", institute: u.institute ?? "",
           phone: u.phone ?? "", address: u.address ?? "", photoUrl: u.photoUrl ?? "",
@@ -47,9 +50,13 @@ export default function ProfilePage() {
           twoFactorEnabled: u.twoFactorEnabled ?? false,
         });
         setPhotoURL(u.photoUrl ?? "");
-      })
-      .catch(() => router.push("/login"))
-      .finally(() => setLoading(false));
+      } catch {
+        router.push("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+    void loadProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -90,19 +97,24 @@ export default function ProfilePage() {
     fd.append("profile", file);
 
     try {
-      const { data } = await axios.post( `${API_BASE_URL}/api/upload`, fd, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
+      const uploadRes = await fetch(`${API_BASE_URL}/api/upload`, {
+        method: "POST",
+        body: fd,
+        credentials: "include",
       });
+      if (!uploadRes.ok) throw new Error("upload failed");
+      const uploadData = await uploadRes.json();
 
-      setPhotoURL(data.url);
-      setFormData(p => ({ ...p, photoUrl: data.url }));
+      setPhotoURL(uploadData.url);
+      setFormData(p => ({ ...p, photoUrl: uploadData.url }));
 
-      await axios.put(
-         `${API_BASE_URL}/api/profile`,
-        { photoUrl: data.url },
-        { withCredentials: true }
-      );
+      const saveRes = await fetch(`${API_BASE_URL}/api/profile`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ photoUrl: uploadData.url }),
+        credentials: "include",
+      });
+      if (!saveRes.ok) throw new Error("save failed");
 
       toast({ title: "Profile photo updated ✅" });
     } catch {
@@ -112,7 +124,13 @@ export default function ProfilePage() {
 
   /* save full profile */
   const handleSaveChanges = () =>
-    axios.put( `${API_BASE_URL}/api/profile`, formData, { withCredentials: true })
+    fetch(`${API_BASE_URL}/api/profile`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+      credentials: "include",
+    })
+      .then((r) => { if (!r.ok) throw new Error(); })
       .then(() => { toast({ title: "Profile Updated" }); setIsEditing(false); })
       .catch(() => toast({ title: "Could not update profile", variant: "destructive" }));
 
