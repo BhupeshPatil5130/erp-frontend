@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Bell, Menu } from "lucide-react";
-import axios from "axios";
 import { API_BASE_URL } from "@/lib/config";
 
 import { Button } from "@/components/ui/button";
@@ -24,14 +23,21 @@ export function MainHeader() {
 
   /* fetch user once */
   useEffect(() => {
-    axios
-      .get( `${API_BASE_URL}/api/profile`, { withCredentials: true })
-      .then((res) => {
-        setUserName(res.data.name);
-        setUserRole(res.data.role || "User");
-        setPhotoUrl(res.data.photoUrl || "");
-      })
-      .catch((err) => console.error("Failed to fetch user info", err));
+    const load = async () => {
+      try {
+        const res = await fetch(`/api/profile`, {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("unauthorized");
+        const data = await res.json();
+        setUserName(data.name || "");
+        setUserRole(data.role || "User");
+        setPhotoUrl(data.photoUrl || "");
+      } catch (err) {
+        console.error("Failed to fetch user info", err);
+      }
+    };
+    void load();
   }, []);
 
   /* notification click */

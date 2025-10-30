@@ -9,9 +9,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 interface UserProfileMenuProps {
   userName: string
   userRole: string
+  photoUrl?: string
 }
 
-export default function UserProfileMenu({ userName, userRole }: UserProfileMenuProps) {
+export default function UserProfileMenu({ userName, userRole, photoUrl }: UserProfileMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
@@ -57,7 +58,11 @@ export default function UserProfileMenu({ userName, userRole }: UserProfileMenuP
         onClick={() => setIsOpen(!isOpen)}
       >
         <Avatar className="h-8 w-8">
-          <AvatarImage src="/placeholder.svg?height=32&width=32" alt={userName} />
+          {photoUrl ? (
+            <AvatarImage src={photoUrl} alt={userName} />
+          ) : (
+            <AvatarImage src="/placeholder.svg?height=32&width=32" alt={userName} />
+          )}
           <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
         </Avatar>
         <div className="hidden md:block">

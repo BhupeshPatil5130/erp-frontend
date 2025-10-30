@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { API_BASE_URL } from "@/lib/config";
+import { getUserProfile } from "@/lib/api-service";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -38,11 +39,17 @@ export default function ProfilePage() {
   useEffect(() => {
     const loadProfile = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/profile`, {
+        const res = await fetch(`/api/profile`, {
           credentials: "include",
         });
-        if (!res.ok) throw new Error("unauthorized");
-        const u = await res.json();
+        let u: any;
+        if (res.ok) {
+          u = await res.json();
+        } else {
+          // Fallback to local profile (no-cookie env) so page still works
+          const fallback = await getUserProfile();
+          u = fallback.data;
+        }
         setFormData({
           name: u.name ?? "", email: u.email ?? "", institute: u.institute ?? "",
           phone: u.phone ?? "", address: u.address ?? "", photoUrl: u.photoUrl ?? "",
@@ -51,7 +58,7 @@ export default function ProfilePage() {
         });
         setPhotoURL(u.photoUrl ?? "");
       } catch {
-        router.push("/login");
+        // As a last resort, do not navigate; keep user on page
       } finally {
         setLoading(false);
       }
@@ -97,7 +104,7 @@ export default function ProfilePage() {
     fd.append("profile", file);
 
     try {
-      const uploadRes = await fetch(`${API_BASE_URL}/api/upload`, {
+      const uploadRes = await fetch(`/api/upload`, {
         method: "POST",
         body: fd,
         credentials: "include",
@@ -108,7 +115,7 @@ export default function ProfilePage() {
       setPhotoURL(uploadData.url);
       setFormData(p => ({ ...p, photoUrl: uploadData.url }));
 
-      const saveRes = await fetch(`${API_BASE_URL}/api/profile`, {
+      const saveRes = await fetch(`/api/profile`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ photoUrl: uploadData.url }),
@@ -124,7 +131,7 @@ export default function ProfilePage() {
 
   /* save full profile */
   const handleSaveChanges = () =>
-    fetch(`${API_BASE_URL}/api/profile`, {
+    fetch(`/api/profile`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
