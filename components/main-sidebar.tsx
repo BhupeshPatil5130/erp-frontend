@@ -155,14 +155,8 @@ export function MainSidebar() {
       <div className="flex h-16 items-center border-b px-4 bg-emerald-50 border-emerald-100">
         <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-emerald-800">
           <Building className="h-6 w-6 text-emerald-700" />
-          <span className={cn("font-semibold text-sm", !isOpen && "hidden")}>SUNOIAKIDS PRE-SCHOOL  SYSTEM</span>
+          <span className={cn("font-semibold text-sm text-left truncate", !isOpen && "hidden")}>SUNOIAKIDS PRE-SCHOOL  SYSTEM</span>
         </Link>
-        {isMobile && (
-          <Button variant="ghost" size="icon" className="ml-auto text-emerald-700" onClick={() => setIsOpen(false)}>
-            <X className="h-5 w-5" />
-            <span className="sr-only">Close</span>
-          </Button>
-        )}
       </div>
       <ScrollArea className="flex-1 px-2">
         <div className="space-y-1 py-2">
@@ -188,8 +182,7 @@ export function MainSidebar() {
                 <AccordionItem value={item.title} className="border-none">
                   <AccordionTrigger
                     className={cn(
-                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-amber-100 hover:text-emerald-900 no-underline",
-                      !isOpen && "justify-center",
+                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-amber-100 hover:text-emerald-900 no-underline text-left",
                     )}
                   >
                     <item.icon className="h-5 w-5 text-emerald-700" />
