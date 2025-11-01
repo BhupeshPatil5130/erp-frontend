@@ -235,7 +235,7 @@ export function MainSidebar() {
               <Building className="h-6 w-6 text-emerald-700" />
             )}
           </div>
-          <span className={cn("font-semibold text-sm text-left truncate", !isOpen && "hidden")}>SUNOIAKIDS PRE-SCHOOL  SYSTEM</span>
+          {/* <span className={cn("font-semibold text-sm text-left truncate", !isOpen && "hidden")}>SUNOIAKIDS PRE-SCHOOL  SYSTEM</span> */}
         </Link>
       </div>
       <ScrollArea className="flex-1 px-2">
