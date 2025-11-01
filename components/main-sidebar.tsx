@@ -212,16 +212,15 @@ export function MainSidebar() {
 
   const sidebar = (
     <>
-      <div className="flex h-16 items-center border-b px-4 bg-emerald-50 border-emerald-100">
-        <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-emerald-800">
-          <div className="relative h-8 w-8 flex-shrink-0 flex items-center justify-center">
+      <div className="flex h-16 items-center justify-center border-b px-4 bg-emerald-50 border-emerald-100">
+        <Link href="/dashboard" className="flex items-center justify-center w-full h-full">
+          <div className="relative w-full h-full flex items-center justify-center max-w-full max-h-full">
             {!imageError && logoPath !== "/placeholder-logo.png" ? (
               <Image
                 src={logoPath}
                 alt={institute ? `${institute} Logo` : "Institute Logo"}
-                width={32}
-                height={32}
-                className="object-contain"
+                fill
+                className="object-contain p-2"
                 onError={(e) => {
                   console.error(`[Logo] Failed to load image: ${logoPath}`, e)
                   setImageError(true)
@@ -232,7 +231,7 @@ export function MainSidebar() {
                 unoptimized
               />
             ) : (
-              <Building className="h-6 w-6 text-emerald-700" />
+              <Building className="h-10 w-10 text-emerald-700" />
             )}
           </div>
           {/* <span className={cn("font-semibold text-sm text-left truncate", !isOpen && "hidden")}>SUNOIAKIDS PRE-SCHOOL  SYSTEM</span> */}
