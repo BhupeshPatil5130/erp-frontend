@@ -1,6 +1,8 @@
 "use client"
 
 import type React from "react"
+import { useState, useEffect } from "react"
+import Image from "next/image"
 
 import { useSidebar } from "@/components/sidebar-provider"
 import { cn } from "@/lib/utils"
@@ -142,9 +144,67 @@ const sidebarItems: SidebarItem[] = [
   },
 ]
 
+// Helper function to get institute logo path based on institute name
+const getInstituteLogo = (institute: string | null | undefined): string => {
+  if (!institute) {
+    console.log("[Logo] No institute name provided, using placeholder")
+    return "/placeholder-logo.png"
+  }
+  
+  // Normalize: lowercase, trim, and remove spaces/hyphens for consistent matching
+  const normalized = institute.toLowerCase().trim().replace(/[\s-]+/g, "")
+  
+  console.log(`[Logo] Institute: "${institute}" → Normalized: "${normalized}"`)
+  
+  // Map institute names to logo paths (normalized without spaces)
+  const logoMap: Record<string, string> = {
+    playgroup: "/logos/playgroup-logo.png",
+    nursery: "/logos/nursery-logo.png",
+    sujunor: "/logos/sujunor-logo.png",
+    susenior: "/logos/susenior-logo.png",
+    // Handle common variations
+    sujunior: "/logos/sujunor-logo.png",
+    playschool: "/logos/playgroup-logo.png",
+  }
+  
+  const logoPath = logoMap[normalized] || "/placeholder-logo.png"
+  console.log(`[Logo] Selected logo: ${logoPath}`)
+  
+  return logoPath
+}
+
 export function MainSidebar() {
   const { isOpen, setIsOpen, isMobile } = useSidebar()
   const pathname = usePathname()
+  const [institute, setInstitute] = useState<string | null>(null)
+  const [logoPath, setLogoPath] = useState<string>("/placeholder-logo.png")
+  const [imageError, setImageError] = useState(false)
+
+  // Fetch institute from profile
+  useEffect(() => {
+    const loadInstitute = async () => {
+      try {
+        console.log("[Logo] Fetching profile to get institute...")
+        const res = await fetch(`/api/profile`, {
+          credentials: "include",
+        })
+        if (res.ok) {
+          const data = await res.json()
+          const instituteName = data.institute || null
+          console.log("[Logo] Profile API response:", { institute: instituteName, fullData: data })
+          setInstitute(instituteName)
+          const newLogoPath = getInstituteLogo(instituteName)
+          setLogoPath(newLogoPath)
+          setImageError(false)
+        } else {
+          console.warn("[Logo] Profile API returned non-OK status:", res.status)
+        }
+      } catch (err) {
+        console.error("[Logo] Failed to fetch institute info", err)
+      }
+    }
+    void loadInstitute()
+  }, [])
 
   const isActive = (href: string) => {
     return pathname === href
@@ -154,7 +214,27 @@ export function MainSidebar() {
     <>
       <div className="flex h-16 items-center border-b px-4 bg-emerald-50 border-emerald-100">
         <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-emerald-800">
-          <Building className="h-6 w-6 text-emerald-700" />
+          <div className="relative h-8 w-8 flex-shrink-0 flex items-center justify-center">
+            {!imageError && logoPath !== "/placeholder-logo.png" ? (
+              <Image
+                src={logoPath}
+                alt={institute ? `${institute} Logo` : "Institute Logo"}
+                width={32}
+                height={32}
+                className="object-contain"
+                onError={(e) => {
+                  console.error(`[Logo] Failed to load image: ${logoPath}`, e)
+                  setImageError(true)
+                }}
+                onLoad={() => {
+                  console.log(`[Logo] Successfully loaded: ${logoPath}`)
+                }}
+                unoptimized
+              />
+            ) : (
+              <Building className="h-6 w-6 text-emerald-700" />
+            )}
+          </div>
           <span className={cn("font-semibold text-sm text-left truncate", !isOpen && "hidden")}>SUNOIAKIDS PRE-SCHOOL  SYSTEM</span>
         </Link>
       </div>
