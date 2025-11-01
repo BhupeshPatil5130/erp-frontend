@@ -62,44 +62,52 @@ export function MainHeader() {
         <span className="sr-only">Toggle Menu</span>
       </Button>
 
-      <div className="flex-1" />
-
-      {/* right-hand controls */}
-      <div className="flex items-center gap-4">
-        {/* bell */}
-        <div className="relative">
-          <Button variant="ghost" size="icon" onClick={handleNotificationClick}>
-            <Bell className="h-5 w-5" />
-            {notificationCount > 0 && (
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center">
-                {notificationCount}
-              </Badge>
-            )}
-            <span className="sr-only">Notifications</span>
-          </Button>
+      {/* container with flex justify-between */}
+      <div className="flex flex-1 items-center justify-between gap-4">
+        {/* left side - title */}
+        <div className="flex items-center">
+          <span className="font-semibold text-sm text-left truncate text-emerald-800">
+            SUNOIAKIDS PRE-SCHOOL SYSTEM
+          </span>
         </div>
 
-        {/* avatar (picture OR initials) */}
-        <Avatar className="h-9 w-9">
-          {photoUrl && !imageError ? (
-            <AvatarImage
-              src={photoUrl}
-              alt={userName}
-              onError={() => setImageError(true)}
-            />
-          ) : (
-            <AvatarFallback className="uppercase">
-              {userName.slice(0, 2)}
-            </AvatarFallback>
-          )}
-        </Avatar>
+        {/* right-hand controls */}
+        <div className="flex items-center gap-4">
+          {/* bell */}
+          <div className="relative">
+            <Button variant="ghost" size="icon" onClick={handleNotificationClick}>
+              <Bell className="h-5 w-5" />
+              {notificationCount > 0 && (
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center">
+                  {notificationCount}
+                </Badge>
+              )}
+              <span className="sr-only">Notifications</span>
+            </Button>
+          </div>
 
-        {/* dropdown */}
-        <UserProfileMenu
-          userName={userName}
-          userRole={userRole}
-          photoUrl={photoUrl && !imageError ? photoUrl : undefined}
-        />
+          {/* avatar (picture OR initials) */}
+          <Avatar className="h-9 w-9">
+            {photoUrl && !imageError ? (
+              <AvatarImage
+                src={photoUrl}
+                alt={userName}
+                onError={() => setImageError(true)}
+              />
+            ) : (
+              <AvatarFallback className="uppercase">
+                {userName.slice(0, 2)}
+              </AvatarFallback>
+            )}
+          </Avatar>
+
+          {/* dropdown */}
+          <UserProfileMenu
+            userName={userName}
+            userRole={userRole}
+            photoUrl={photoUrl && !imageError ? photoUrl : undefined}
+          />
+        </div>
       </div>
     </header>
   );
