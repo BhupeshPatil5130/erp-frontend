@@ -1,9 +1,29 @@
 "use client"
 
 import type React from "react"
-import { SidebarProvider } from "@/components/sidebar-provider"
+import { SidebarProvider, useSidebar } from "@/components/sidebar-provider"
 import { MainSidebar } from "@/components/main-sidebar"
 import { MainHeader } from "@/components/main-header"
+import { cn } from "@/lib/utils"
+
+function DashboardContent({ children }: { children: React.ReactNode }) {
+  const { isOpen } = useSidebar()
+  
+  return (
+    <div className="flex min-h-screen">
+      <MainSidebar />
+      <div 
+        className={cn(
+          "flex flex-col flex-1 transition-all duration-300",
+          isOpen ? "md:ml-64" : "md:ml-[70px]"
+        )}
+      >
+        <MainHeader />
+        <main className="flex-1 p-6 overflow-auto">{children}</main>
+      </div>
+    </div>
+  )
+}
 
 export default function DashboardLayout({
   children,
@@ -12,13 +32,7 @@ export default function DashboardLayout({
 }) {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen">
-        <MainSidebar />
-        <div className="flex flex-col flex-1">
-          <MainHeader />
-          <main className="flex-1 p-6 overflow-auto">{children}</main>
-        </div>
-      </div>
+      <DashboardContent>{children}</DashboardContent>
     </SidebarProvider>
   )
 }

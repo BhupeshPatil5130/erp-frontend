@@ -320,9 +320,9 @@ export function MainSidebar() {
   return (
     <div
       className={cn(
-        "flex flex-col border-r bg-emerald-50 border-emerald-100",
+        "flex flex-col border-r bg-emerald-50 border-emerald-100 fixed left-0 top-0 h-screen",
         isOpen ? "w-64" : "w-[70px]",
-        "transition-width duration-300",
+        "transition-width duration-300 z-50",
       )}
     >
       {sidebar}
