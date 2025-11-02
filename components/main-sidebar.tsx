@@ -151,8 +151,8 @@ const getInstituteLogo = (institute: string | null | undefined): string => {
     return "/placeholder-logo.png"
   }
   
-  // Normalize: lowercase, trim, and remove spaces/hyphens for consistent matching
-  const normalized = institute.toLowerCase().trim().replace(/[\s-]+/g, "")
+  // Normalize: lowercase, trim, and remove spaces/hyphens/underscores for consistent matching
+  const normalized = institute.toLowerCase().trim().replace(/[\s\-_]+/g, "")
   
   console.log(`[Logo] Institute: "${institute}" → Normalized: "${normalized}"`)
   
@@ -162,9 +162,13 @@ const getInstituteLogo = (institute: string | null | undefined): string => {
     nursery: "/logos/nursery-logo.png",
     sujunor: "/logos/sujunor-logo.png",
     susenior: "/logos/susenior-logo.png",
-    // Handle common variations
+    // Handle common variations and typos
     sujunior: "/logos/sujunor-logo.png",
     playschool: "/logos/playgroup-logo.png",
+    playgroups: "/logos/playgroup-logo.png",
+    nurseries: "/logos/nursery-logo.png",
+    sujunors: "/logos/sujunor-logo.png",
+    suseniors: "/logos/susenior-logo.png",
   }
   
   const logoPath = logoMap[normalized] || "/placeholder-logo.png"
@@ -179,6 +183,7 @@ export function MainSidebar() {
   const [institute, setInstitute] = useState<string | null>(null)
   const [logoPath, setLogoPath] = useState<string>("/placeholder-logo.png")
   const [imageError, setImageError] = useState(false)
+  const [triedPlaceholder, setTriedPlaceholder] = useState(false)
 
   // Fetch institute from profile
   useEffect(() => {
@@ -196,6 +201,7 @@ export function MainSidebar() {
           const newLogoPath = getInstituteLogo(instituteName)
           setLogoPath(newLogoPath)
           setImageError(false)
+          setTriedPlaceholder(newLogoPath === "/placeholder-logo.png")
         } else {
           console.warn("[Logo] Profile API returned non-OK status:", res.status)
         }
@@ -215,7 +221,7 @@ export function MainSidebar() {
       <div className="flex h-16 items-center justify-center border-b px-4 bg-emerald-50 border-emerald-100">
         <Link href="/dashboard" className="flex items-center justify-center w-full h-full">
           <div className="relative w-full h-full flex items-center justify-center max-w-full max-h-full">
-            {!imageError && logoPath !== "/placeholder-logo.png" ? (
+            {!imageError ? (
               <Image
                 src={logoPath}
                 alt={institute ? `${institute} Logo` : "Institute Logo"}
@@ -223,7 +229,16 @@ export function MainSidebar() {
                 className="object-contain p-2"
                 onError={(e) => {
                   console.error(`[Logo] Failed to load image: ${logoPath}`, e)
-                  setImageError(true)
+                  // Try to fallback to placeholder if we haven't already
+                  if (!triedPlaceholder && logoPath !== "/placeholder-logo.png") {
+                    console.log("[Logo] Falling back to placeholder logo")
+                    setLogoPath("/placeholder-logo.png")
+                    setTriedPlaceholder(true)
+                    // Don't set imageError yet, let it try the placeholder
+                  } else {
+                    // Both institute logo and placeholder failed, show icon
+                    setImageError(true)
+                  }
                 }}
                 onLoad={() => {
                   console.log(`[Logo] Successfully loaded: ${logoPath}`)

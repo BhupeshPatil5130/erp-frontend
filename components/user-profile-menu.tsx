@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { User, Users, Shield, Settings, LogOut } from "lucide-react"
+import { User, Users, Shield, Settings, LogOut, UserCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -57,14 +57,18 @@ export default function UserProfileMenu({ userName, userRole, photoUrl }: UserPr
         className="flex items-center gap-2 cursor-pointer p-2 rounded-md hover:bg-gray-100"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <Avatar className="h-8 w-8">
-          {photoUrl ? (
+        {photoUrl ? (
+          <Avatar className="h-8 w-8">
             <AvatarImage src={photoUrl} alt={userName} />
-          ) : (
-            <AvatarImage src="/placeholder.svg?height=32&width=32" alt={userName} />
-          )}
-          <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
-        </Avatar>
+            <AvatarFallback className="bg-emerald-100">
+              <UserCircle className="h-8 w-8 text-emerald-700" />
+            </AvatarFallback>
+          </Avatar>
+        ) : (
+          <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
+            <UserCircle className="h-8 w-8 text-emerald-700" />
+          </div>
+        )}
         <div className="hidden md:block">
           <p className="text-sm font-medium">{userName}</p>
           <p className="text-xs text-muted-foreground">{userRole}</p>

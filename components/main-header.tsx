@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bell, Menu } from "lucide-react";
+import { Bell, Menu, UserCircle } from "lucide-react";
 import { API_BASE_URL } from "@/lib/config";
 
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ export function MainHeader() {
   const [userName, setUserName] = useState("");
   const [userRole, setUserRole] = useState("");
   const [photoUrl, setPhotoUrl] = useState<string>("");
-  const [imageError, setImageError] = useState(false);   // 👈 new
+  const [imageError, setImageError] = useState(false);
 
   /* fetch user once */
   useEffect(() => {
@@ -86,20 +86,23 @@ export function MainHeader() {
             </Button>
           </div>
 
-          {/* avatar (picture OR initials) */}
-          <Avatar className="h-9 w-9">
-            {photoUrl && !imageError ? (
+          {/* avatar (picture OR lucide icon) */}
+          {photoUrl && !imageError ? (
+            <Avatar className="h-9 w-9">
               <AvatarImage
                 src={photoUrl}
                 alt={userName}
                 onError={() => setImageError(true)}
               />
-            ) : (
-              <AvatarFallback className="uppercase">
-                {userName.slice(0, 2)}
+              <AvatarFallback className="bg-emerald-100">
+                <UserCircle className="h-9 w-9 text-emerald-700" />
               </AvatarFallback>
-            )}
-          </Avatar>
+            </Avatar>
+          ) : (
+            <div className="h-9 w-9 rounded-full bg-emerald-100 flex items-center justify-center">
+              <UserCircle className="h-9 w-9 text-emerald-700" />
+            </div>
+          )}
 
           {/* dropdown */}
           <UserProfileMenu
