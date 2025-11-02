@@ -94,8 +94,9 @@ export function MainHeader() {
                 alt={userName}
                 onError={() => setImageError(true)}
               />
-              <AvatarFallback className="bg-emerald-100">
-                <UserCircle className="h-9 w-9 text-emerald-700" />
+              <AvatarFallback className="uppercase">
+                {userName.slice(0, 2)}
+             
               </AvatarFallback>
             </Avatar>
           ) : (
