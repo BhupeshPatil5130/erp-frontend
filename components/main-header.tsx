@@ -20,6 +20,22 @@ export function MainHeader() {
   const [userRole, setUserRole] = useState("");
   const [photoUrl, setPhotoUrl] = useState<string>("");
   const [imageError, setImageError] = useState(false);
+  const [institute, setInstitute] = useState<string>("");
+  const [logoPath, setLogoPath] = useState<string>("/placeholder-logo.png");
+  const [logoError, setLogoError] = useState(false);
+
+  const getInstituteLogo = (value: string): string => {
+    const normalized = (value || "").toLowerCase().replace(/\s+/g, "");
+    const map: Record<string, string> = {
+      playgroup: "/logos/playgroup-logo.png",
+      nursery: "/logos/nursery-logo.png",
+      sujunor: "/logos/sujunor-logo.png",
+      susenior: "/logos/susenior-logo.png",
+      sujunior: "/logos/sujunor-logo.png",
+      playschool: "/logos/playgroup-logo.png",
+    };
+    return map[normalized] || "/placeholder-logo.png";
+  };
 
   /* fetch user once */
   useEffect(() => {
@@ -33,6 +49,9 @@ export function MainHeader() {
         setUserName(data.name || "");
         setUserRole(data.role || "User");
         setPhotoUrl(data.photoUrl || "");
+        setInstitute(data.institute || "");
+        const newLogo = getInstituteLogo(data.institute || "");
+        setLogoPath(newLogo);
       } catch (err) {
         console.error("Failed to fetch user info", err);
       }
@@ -64,8 +83,18 @@ export function MainHeader() {
 
       {/* container with flex justify-between */}
       <div className="flex flex-1 items-center justify-between gap-4">
-        {/* left side - title */}
-        <div className="flex items-center">
+        {/* left side - logo + title */}
+        <div className="flex items-center gap-2">
+          {logoPath && !logoError ? (
+            <img
+              src={logoPath}
+              alt={institute ? `${institute} Logo` : "Institute Logo"}
+              className="h-8 w-auto"
+              onError={() => setLogoError(true)}
+            />
+          ) : (
+            <div className="h-8 w-8 rounded bg-emerald-100" />
+          )}
           <span className="font-semibold text-sm text-left truncate text-emerald-800">
             SUNOIAKIDS PRE-SCHOOL SYSTEM
           </span>

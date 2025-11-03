@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select"
-import { Building2, UserPlus } from "lucide-react"
+import { UserPlus } from "lucide-react"
 
 export default function SignupPage() {
   return (
@@ -42,11 +42,32 @@ function SignupInner() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [logoPath, setLogoPath] = useState<string>("/placeholder-logo.png")
+  const [imageError, setImageError] = useState(false)
+
+  const getInstituteLogo = (value: string): string => {
+    const normalized = (value || "").toLowerCase().replace(/\s+/g, "")
+    const map: Record<string, string> = {
+      playgroup: "/logos/playgroup-logo.png",
+      nursery: "/logos/nursery-logo.png",
+      sujunor: "/logos/sujunor-logo.png",
+      susenior: "/logos/susenior-logo.png",
+      sujunior: "/logos/sujunor-logo.png",
+      playschool: "/logos/playgroup-logo.png",
+    }
+    return map[normalized] || "/placeholder-logo.png"
+  }
 
   useEffect(() => {
     const q = searchParams?.get("institute") || ""
     if (q) setInstitute(q)
   }, [searchParams])
+
+  useEffect(() => {
+    const path = getInstituteLogo(institute)
+    setLogoPath(path)
+    setImageError(false)
+  }, [institute])
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -83,13 +104,22 @@ function SignupInner() {
   }
 
   return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-white to-amber-50">
         <Card className="w-full max-w-md">
-          <CardHeader className="space-y-1">
+          <CardHeader className="space-y-1 border-b">
             <div className="flex items-center justify-center mb-4">
-              <Building2 className="h-12 w-12 text-primary" />
+              {logoPath && !imageError ? (
+                <img
+                  src={logoPath}
+                  alt={institute ? `${institute} Logo` : "Institute Logo"}
+                  className="h-12 w-auto"
+                  onError={() => setImageError(true)}
+                />
+              ) : (
+                <div className="h-12 w-12 rounded-full bg-emerald-100" />
+              )}
             </div>
-            <CardTitle className="text-2xl text-center">Create an Account</CardTitle>
+            <CardTitle className="text-2xl text-center text-emerald-800">Create an Account</CardTitle>
             <CardDescription className="text-center">
               Enter your information to create an account
             </CardDescription>
@@ -150,7 +180,7 @@ function SignupInner() {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white">
                 <UserPlus className="mr-2 h-4 w-4" />
                 Sign Up
               </Button>
