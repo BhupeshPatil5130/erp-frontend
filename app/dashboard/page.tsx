@@ -125,15 +125,19 @@ export default function DashboardPage() {
 
     const fetchData = async () => {
       try {
-        const [enquiryRes, userRes, lsqRes, admissionRes, chartRes] = await Promise.all([
-          axios.get( `${API_BASE_URL}/api/enquiries/count`),
-          axios.get( `${API_BASE_URL}/api/profile`, { withCredentials: true }),
-          axios.get( `${API_BASE_URL}/api/lsq-enquiries/count`),
-          axios.get( `${API_BASE_URL}/api/admissions/count`),
-          axios.get( `${API_BASE_URL}/api/enquiry-stats`),
-
-
+        const results = await Promise.allSettled([
+          axios.get(`${API_BASE_URL}/api/enquiries/count`),
+          axios.get(`${API_BASE_URL}/api/profile`, { withCredentials: true }),
+          axios.get(`${API_BASE_URL}/api/lsq-enquiries/count`),
+          axios.get(`${API_BASE_URL}/api/admissions/count`),
+          axios.get(`${API_BASE_URL}/api/enquiry-stats`),
         ])
+
+        const enquiryRes = results[0].status === "fulfilled" ? results[0].value : null
+        const userRes     = results[1].status === "fulfilled" ? results[1].value : null
+        const lsqRes      = results[2].status === "fulfilled" ? results[2].value : null
+        const admissionRes= results[3].status === "fulfilled" ? results[3].value : null
+        const chartRes    = results[4].status === "fulfilled" ? results[4].value : null
 
         if (enquiryRes?.data?.count !== undefined) setEnquiryCount(enquiryRes.data.count)
         if (lsqRes?.data?.count !== undefined) setLsqEnquiryCount(lsqRes.data.count)
@@ -144,7 +148,7 @@ export default function DashboardPage() {
           setChartData(defaultEnquiryPieData)
         }
 
-        setUserName(userRes.data.name)
+        if (userRes?.data?.name) setUserName(userRes.data.name)
 
         setDashboardData((prev: any) => ({
           ...prev,
