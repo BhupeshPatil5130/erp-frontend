@@ -182,6 +182,14 @@ export default function DashboardPage() {
 
     fetchData();
     fetchAdmissionChartData();
+
+    // Periodically refresh counts and charts so dashboard updates dynamically
+    const intervalId = setInterval(() => {
+      void fetchData();
+      void fetchAdmissionChartData();
+    }, 20000); // every 20s
+
+    return () => clearInterval(intervalId);
   }, [])
 
   const handleCardClick = (route: string, title: string) => {
