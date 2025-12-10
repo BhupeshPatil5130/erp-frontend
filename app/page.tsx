@@ -417,13 +417,13 @@ export default function LandingPage() {
                   color="bg-gradient-to-br from-orange-500 to-orange-600"
                   icon={Globe}
                 />
-                {/* <BrandCard
+                /* /* <BrandCard
                   title="UTOPIA : Global School"
                   description="A chain of CBSE and ICSE schools with Global Approach (Integrated Curriculum)."
                   color="bg-gradient-to-br from-orange-500 to-orange-600"
                   icon={GraduationCap}
-                />
-              </div> */}
+                />*/ 
+              </div> 
             </TabsContent>
             <TabsContent value="preschool" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
