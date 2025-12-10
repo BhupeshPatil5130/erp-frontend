@@ -83,6 +83,7 @@ function SignupInner() {
         headers: {
           "Content-Type": "application/json"
         },
+        credentials: "include",
         body: JSON.stringify({
           institute,
           name,
@@ -92,7 +93,7 @@ function SignupInner() {
       })
 
       if (response.ok) {
-        router.push("/login")
+        router.push(institute ? `/login/${institute}` : "/login")
       } else {
         const error = await response.json()
         alert(error.message || "Signup failed")
