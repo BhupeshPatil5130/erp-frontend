@@ -25,14 +25,10 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { API_BASE_URL } from "@/lib/config"
 
 const courseOptions = [
-  "Computer Science",
-  "Business Administration",
-  "Electrical Engineering",
-  "Mechanical Engineering",
-  "Psychology",
-  "Civil Engineering",
-  "Information Technology",
-  "Data Science",
+  " play ground",
+  "Nursery",
+  "Sujunior",
+  "Susenior",
 ]
 
 const batchOptions = ["2023-24", "2024-25", "2025-26"]

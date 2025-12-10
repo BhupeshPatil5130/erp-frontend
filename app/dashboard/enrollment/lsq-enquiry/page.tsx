@@ -44,16 +44,7 @@ export default function LSQEnquiryPage() {
     notes: "",
   })
 
-  const courseOptions = [
-    "Computer Science",
-    "Business Administration",
-    "Electrical Engineering",
-    "Mechanical Engineering",
-    "Psychology",
-    "Civil Engineering",
-    "Information Technology",
-    "Data Science",
-  ]
+  const courseOptions = ["Play group", "Nursery", "Sujunior", "Susenior"]
 
   const sourceOptions = [
     "Website",
@@ -81,6 +72,12 @@ export default function LSQEnquiryPage() {
   useEffect(() => {
     fetchLsqEnquiries()
   }, [])
+
+  const summaryByProgram = lsqData.reduce<Record<string, number>>((acc, item: any) => {
+    const key = (item.course || "Other").toString()
+    acc[key] = (acc[key] || 0) + 1
+    return acc
+  }, {})
 
   const handleSearch = () => {
     const term = searchTerm.toLowerCase()
@@ -292,6 +289,25 @@ export default function LSQEnquiryPage() {
             </DialogContent>
           </Dialog>
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {Object.entries(summaryByProgram).map(([program, count]) => (
+          <Card key={program} className="border-emerald-100 bg-emerald-50/60">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">{program}</CardTitle>
+              <CardDescription className="text-sm">Total Enquiries</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-2xl font-semibold">{count}</div>
+                <div className="h-2 w-20 bg-emerald-100 rounded-full">
+                  <div className="h-2 bg-emerald-500 rounded-full" style={{ width: "80%" }} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       <Tabs defaultValue="all" className="space-y-4">
