@@ -25,10 +25,10 @@ import { useToast } from "@/hooks/use-toast"
 export default function LSQEnquiryPage() {
   const { toast } = useToast()
 
-  const [lsqData, setLsqData] = useState([])
+  const [lsqData, setLsqData] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
-  const [filteredData, setFilteredData] = useState([])
+  const [filteredData, setFilteredData] = useState<any[]>([])
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
