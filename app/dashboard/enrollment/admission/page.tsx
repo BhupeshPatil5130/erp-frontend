@@ -33,6 +33,33 @@ const courseOptions = [
 
 const batchOptions = ["2023-24", "2024-25", "2025-26"]
 
+const seedAdmissions = () =>
+  Array.from({ length: 100 }).map((_, index) => {
+    const program = courseOptions[index % courseOptions.length]
+    const id = `SEED-ADM-${(index + 1).toString().padStart(3, "0")}`
+    const studentId = `SEED-STU-${(index + 1).toString().padStart(3, "0")}`
+    const date = `2025-01-${((index % 28) + 1).toString().padStart(2, "0")}`
+    const statusCycle = ["Pending", "Approved", "Rejected"]
+    const feeCycle = ["Pending", "Paid", "Partially Paid"]
+
+    return {
+      admissionId: id,
+      id,
+      studentId,
+      name: `Seed Student ${index + 1}`,
+      phone: `99999${(10000 + index).toString().slice(-5)}`,
+      email: `seed${index + 1}@example.com`,
+      course: program,
+      program,
+      batch: batchOptions[index % batchOptions.length],
+      date,
+      status: statusCycle[index % statusCycle.length],
+      feeStatus: feeCycle[index % feeCycle.length],
+      documents: [],
+      notes: "Sample seeded admission",
+    }
+  })
+
 const requiredDocuments = [
   "ID Proof",
   "Address Proof",
@@ -96,12 +123,16 @@ export default function AdmissionPage() {
 
   const fetchAdmissions = async () => {
     try {
-      const res = await fetch( `${API_BASE_URL}/api/admissions`, { credentials: "include" })
-      const data = await res.json()
-      setAdmissionData(data)
-      setFilteredData(data)
+      const res = await fetch(`${API_BASE_URL}/api/admissions`, { credentials: "include" })
+      const apiData = res.ok ? await res.json() : []
+      const combined = [...apiData, ...seedAdmissions()]
+      setAdmissionData(combined)
+      setFilteredData(combined)
     } catch (err) {
       console.error("Failed to fetch admissions", err)
+      const fallback = seedAdmissions()
+      setAdmissionData(fallback)
+      setFilteredData(fallback)
     }
   }
 

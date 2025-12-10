@@ -44,7 +44,7 @@ export default function LSQEnquiryPage() {
     notes: "",
   })
 
-  const courseOptions = ["Play group", "Nursery", "Sujunior", "Susenior"]
+  const courseOptions = [" play ground", "Nursery", "Sujunior", "Susenior"]
 
   const sourceOptions = [
     "Website",
@@ -57,13 +57,38 @@ export default function LSQEnquiryPage() {
     "Direct Walk-in",
   ]
 
+  const seedLsqEnquiries = () =>
+    Array.from({ length: 100 }).map((_, index) => {
+      const course = courseOptions[index % courseOptions.length]
+      const id = `SEED-LSQ-${(index + 1).toString().padStart(3, "0")}`
+      const date = `2025-02-${((index % 28) + 1).toString().padStart(2, "0")}`
+      const statusCycle = ["New", "Contacted", "Interested", "Converted"]
+
+      return {
+        id,
+        name: `Seed LSQ ${index + 1}`,
+        phone: `88888${(10000 + index).toString().slice(-5)}`,
+        email: `lsq${index + 1}@example.com`,
+        course,
+        source: sourceOptions[index % sourceOptions.length],
+        date,
+        status: statusCycle[index % statusCycle.length],
+        notes: "Sample seeded LSQ enquiry",
+      }
+    })
+
   const fetchLsqEnquiries = async () => {
     try {
-      const res = await axios.get( `${API_BASE_URL}/api/lsq-enquiries`)
-      setLsqData(res.data)
-      setFilteredData(res.data)
+      const res = await axios.get(`${API_BASE_URL}/api/lsq-enquiries`)
+      const apiData = res.data || []
+      const combined = [...apiData, ...seedLsqEnquiries()]
+      setLsqData(combined)
+      setFilteredData(combined)
     } catch (err) {
       console.error("Error fetching LSQ enquiries", err)
+      const fallback = seedLsqEnquiries()
+      setLsqData(fallback)
+      setFilteredData(fallback)
     } finally {
       setLoading(false)
     }
