@@ -68,15 +68,15 @@ export default function DashboardPage() {
     const defaultEnquiryPieData: any[] = [
       { name: "Playgroup", value: 45, count: 120, fill: "#f97316" },
       { name: "Nursery", value: 30, count: 80, fill: "#fb923c" },
-      { name: "Euro Junior", value: 15, count: 40, fill: "#ea580c" },
-      { name: "Euro Senior", value: 10, count: 25, fill: "#c2410c" },
+      { name: "Su Junior", value: 15, count: 40, fill: "#ea580c" },
+      { name: "Su Senior", value: 10, count: 25, fill: "#c2410c" },
     ]
 
     const defaultAdmissionPieData: any[] = [
       { name: "Playgroup", value: 50, count: 100, fill: "#f97316" },
       { name: "Nursery", value: 25, count: 50, fill: "#fb923c" },
-      { name: "Euro Junior", value: 15, count: 30, fill: "#ea580c" },
-      { name: "Euro Senior", value: 10, count: 20, fill: "#c2410c" },
+      { name: "Su Junior", value: 15, count: 30, fill: "#ea580c" },
+      { name: "Su Senior", value: 10, count: 20, fill: "#c2410c" },
     ]
 
     const defaultEnrollmentTrendsData = [
@@ -639,7 +639,7 @@ export default function DashboardPage() {
               <h3 className="text-lg font-semibold mb-4">Fee Rate Card (Offline)</h3>
 
               <div className="mb-6">
-                <div className="bg-orange-100 p-2 font-medium">Euro Junior (ApprovedByAllIndiaBM)</div>
+                <div className="bg-orange-100 p-2 font-medium">Su Junior (ApprovedByAllIndiaBM)</div>
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
                     <thead>
@@ -673,7 +673,7 @@ export default function DashboardPage() {
               </div>
 
               <div className="mb-6">
-                <div className="bg-orange-100 p-2 font-medium">Euro Senior (ApprovedByAllIndiaBM)</div>
+                <div className="bg-orange-100 p-2 font-medium">Su Senior (ApprovedByAllIndiaBM)</div>
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
                     <thead>

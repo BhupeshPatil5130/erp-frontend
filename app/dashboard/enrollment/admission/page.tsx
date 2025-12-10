@@ -324,7 +324,7 @@ export default function AdmissionPage() {
         <h1 className="text-3xl font-bold tracking-tight">Create Admission</h1>
         <Button onClick={() => setIsAddDialogOpen(true)}>
           <UserPlus className="mr-2 h-4 w-4" /> Quick Add
-        </Button>
+            </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -365,7 +365,7 @@ export default function AdmissionPage() {
               <div className="rounded-md border bg-emerald-50 border-emerald-100 p-4">
                 <h3 className="text-lg font-semibold text-emerald-800 mb-4">Student Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="space-y-2">
+                <div className="space-y-2">
                     <Label>Academic Year *</Label>
                     <Select onValueChange={(v) => setNewAdmission({ ...newAdmission, academicYear: v })}>
                       <SelectTrigger>
@@ -379,7 +379,7 @@ export default function AdmissionPage() {
                   </div>
                   <div className="space-y-2">
                     <Label>Admission Date *</Label>
-                    <Input
+                  <Input
                       type="month"
                       value={newAdmission.admissionDate}
                       onChange={(e) => setNewAdmission({ ...newAdmission, admissionDate: e.target.value })}
@@ -389,18 +389,18 @@ export default function AdmissionPage() {
                     <Label>Student Name *</Label>
                     <Input
                       placeholder="To be printed on the certificate"
-                      value={newAdmission.name}
-                      onChange={(e) => setNewAdmission({ ...newAdmission, name: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-2">
+                    value={newAdmission.name}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, name: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
                     <Label>Date of Birth *</Label>
-                    <Input
+                  <Input
                       type="date"
                       value={newAdmission.dob}
                       onChange={(e) => setNewAdmission({ ...newAdmission, dob: e.target.value })}
-                    />
-                  </div>
+                  />
+                </div>
                   <div className="space-y-2">
                     <Label>Gender *</Label>
                     <RadioGroup
@@ -417,8 +417,8 @@ export default function AdmissionPage() {
                         <Label htmlFor="female">Girl</Label>
                       </div>
                     </RadioGroup>
-                  </div>
-                  <div className="space-y-2">
+              </div>
+              <div className="space-y-2">
                     <Label>Program Name *</Label>
                     <Select onValueChange={(v) => setNewAdmission({ ...newAdmission, program: v })}>
                       <SelectTrigger>
@@ -434,25 +434,25 @@ export default function AdmissionPage() {
                   </div>
                   <div className="space-y-2">
                     <Label>Nationality</Label>
-                    <Input
+                <Input
                       placeholder="Enter Nationality"
                       value={newAdmission.nationality}
                       onChange={(e) => setNewAdmission({ ...newAdmission, nationality: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-2">
+                />
+              </div>
+                <div className="space-y-2">
                     <Label>Admission Type *</Label>
                     <Select onValueChange={(v) => setNewAdmission({ ...newAdmission, admissionType: v })}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select Type" />
-                      </SelectTrigger>
-                      <SelectContent>
+                    </SelectTrigger>
+                    <SelectContent>
                         <SelectItem value="online">Online</SelectItem>
                         <SelectItem value="offline">Offline</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
                     <Label>Is Uniform Required *</Label>
                     <RadioGroup
                       className="flex gap-4"
@@ -603,7 +603,7 @@ export default function AdmissionPage() {
                         <Label htmlFor="transport-no">No</Label>
                       </div>
                     </RadioGroup>
-                  </div>
+              </div>
                   <div className="space-y-2">
                     <Label>Previous Schooling?</Label>
                     <RadioGroup
@@ -689,11 +689,11 @@ export default function AdmissionPage() {
                 <Button onClick={handleAddAdmission}>Confirm</Button>
                 <Button variant="secondary" onClick={handleResetForm}>
                   <RefreshCcw className="h-4 w-4 mr-2" /> Reload
-                </Button>
+              </Button>
                 <Button variant="outline" onClick={() => window.history.back()}>
                   Back
                 </Button>
-              </div>
+      </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -713,25 +713,25 @@ export default function AdmissionPage() {
               <CardDescription>Manage all student admissions from this panel</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-4 mb-4">
-                <div className="flex-1 flex items-center gap-2">
-                  <Input
-                    placeholder="Search by name, ID, phone, email or course..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="max-w-md"
-                  />
-                  <Button variant="outline" onClick={handleSearch}>
-                    <Search className="h-4 w-4 mr-2" /> Search
-                  </Button>
-                </div>
-                <Button variant="outline">
-                  <Filter className="h-4 w-4 mr-2" /> Filter
-                </Button>
-                <Button variant="outline">
-                  <FileDown className="h-4 w-4 mr-2" /> Export
-                </Button>
-              </div>
+        <div className="flex items-center gap-4 mb-4">
+          <div className="flex-1 flex items-center gap-2">
+            <Input
+              placeholder="Search by name, ID, phone, email or course..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="max-w-md"
+            />
+            <Button variant="outline" onClick={handleSearch}>
+              <Search className="h-4 w-4 mr-2" /> Search
+            </Button>
+          </div>
+          <Button variant="outline">
+            <Filter className="h-4 w-4 mr-2" /> Filter
+          </Button>
+          <Button variant="outline">
+            <FileDown className="h-4 w-4 mr-2" /> Export
+          </Button>
+        </div>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -749,8 +749,8 @@ export default function AdmissionPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredData.map((admission) => (
-                    <TableRow key={`${admission.studentId}-${admission.admissionId}`}>
-                      <TableCell>{admission.admissionId}</TableCell>
+                  <TableRow key={`${admission.studentId}-${admission.admissionId}`}>
+                <TableCell>{admission.admissionId}</TableCell>
                       <TableCell>{admission.studentId}</TableCell>
                       <TableCell>{admission.name}</TableCell>
                       <TableCell>{admission.phone}</TableCell>

@@ -398,43 +398,43 @@ export default function LandingPage() {
 
           <Tabs defaultValue="all" className="w-full">
             <TabsList className="grid w-full grid-cols-4 mb-8 bg-orange-100">
-              <TabsTrigger value="all">All Brands</TabsTrigger>
-              <TabsTrigger value="preschool">Pre Schools</TabsTrigger>
-              <TabsTrigger value="k12">K12 Schools</TabsTrigger>
-              <TabsTrigger value="training">Training</TabsTrigger>
+              <TabsTrigger value="all">SunoiaKids</TabsTrigger>
+              <TabsTrigger value="preschool">Sunoia Global School </TabsTrigger>
+              <TabsTrigger value="k12">Suryadhi Publication</TabsTrigger>
+              <TabsTrigger value="training">Suryadhi Education Management System</TabsTrigger>
             </TabsList>
             <TabsContent value="all" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <BrandCard
-                  title="UTOPIA : World Pre School"
+                  title="SunoiaKids Pre-school "
                   description="A Pre School of International Standards. It acts as feeders to our CBSE & ICSE schools."
                   color="bg-gradient-to-br from-orange-500 to-orange-600"
                   icon={School}
                 />
                 <BrandCard
-                  title="UNIX : Global Pre School"
+                  title=" Sunoia Pre-school "
                   description="A chain of Premium Global Pre Schools; It acts as feeders to our main schools."
                   color="bg-gradient-to-br from-orange-500 to-orange-600"
                   icon={Globe}
                 />
-                <BrandCard
+                {/* <BrandCard
                   title="UTOPIA : Global School"
                   description="A chain of CBSE and ICSE schools with Global Approach (Integrated Curriculum)."
                   color="bg-gradient-to-br from-orange-500 to-orange-600"
                   icon={GraduationCap}
                 />
-              </div>
+              </div> */}
             </TabsContent>
             <TabsContent value="preschool" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <BrandCard
-                  title="UTOPIA : World Pre School"
+                  title="Sunoia Pre-school "
                   description="A Pre School of International Standards. It acts as feeders to our CBSE & ICSE schools."
                   color="bg-gradient-to-br from-orange-500 to-orange-600"
                   icon={School}
                 />
                 <BrandCard
-                  title="UNIX : Global Pre School"
+                  title="Sunoia Primary School "
                   description="A chain of Premium Global Pre Schools; It acts as feeders to our main schools."
                   color="bg-gradient-to-br from-orange-500 to-orange-600"
                   icon={Globe}
@@ -444,7 +444,7 @@ export default function LandingPage() {
             <TabsContent value="k12" className="mt-0">
               <div className="grid grid-cols-1 gap-8">
                 <BrandCard
-                  title="UTOPIA : Global School"
+                  title="Pre-school"
                   description="A chain of CBSE and ICSE schools with Global Approach (Integrated Curriculum)."
                   color="bg-gradient-to-br from-orange-500 to-orange-600"
                   icon={GraduationCap}
@@ -454,7 +454,7 @@ export default function LandingPage() {
             <TabsContent value="training" className="mt-0">
               <div className="grid grid-cols-1 gap-8">
                 <BrandCard
-                  title="Suryadhi Teacher Training Academy"
+                  title="PrimarySchool"
                   description="Comprehensive training programs for educators to enhance teaching methodologies and classroom management."
                   color="bg-gradient-to-br from-orange-500 to-orange-600"
                   icon={BookMarked}
