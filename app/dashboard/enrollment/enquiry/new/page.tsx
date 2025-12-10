@@ -172,8 +172,8 @@ export default function NewEnquiryPage() {
                   <SelectContent>
                     <SelectItem value="playgroup">Play Group</SelectItem>
                     <SelectItem value="nursery">Nursery</SelectItem>
-                    <SelectItem value="eurojunior">Euro Junior</SelectItem>
-                    <SelectItem value="eurosenior">Euro Senior</SelectItem>
+                    <SelectItem value="eurojunior">SuJunior</SelectItem>
+                    <SelectItem value="eurosenior">SuSenior</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

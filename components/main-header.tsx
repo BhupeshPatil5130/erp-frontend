@@ -86,7 +86,7 @@ export function MainHeader() {
             </Button>
           </div>
 
-          {/* avatar (picture OR lucide icon) */}
+          {/* avatar (picture OR lucide icon)
           {photoUrl && !imageError ? (
             <Avatar className="h-9 w-9">
               <AvatarImage
@@ -103,7 +103,7 @@ export function MainHeader() {
             <div className="h-9 w-9 rounded-full bg-emerald-100 flex items-center justify-center">
               <UserCircle className="h-9 w-9 text-emerald-700" />
             </div>
-          )}
+          )} */}
 
           {/* dropdown */}
           <UserProfileMenu

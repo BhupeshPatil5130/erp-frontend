@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Search, FileDown, Filter, Eye, Download, UserPlus, Edit, Trash, CheckCircle } from "lucide-react"
+import { Search, FileDown, Filter, Eye, Download, UserPlus, Edit, Trash, CheckCircle, RefreshCcw } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -19,6 +19,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useToast } from "@/hooks/use-toast"
 import { Checkbox } from "@/components/ui/checkbox"
 import { API_BASE_URL } from "@/lib/config"
@@ -59,13 +60,41 @@ export default function AdmissionPage() {
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false)
   const [selectedAdmission, setSelectedAdmission] = useState<any>(null)
   const [newAdmission, setNewAdmission] = useState({
+    academicYear: "",
+    admissionDate: "",
     name: "",
+    dob: "",
+    gender: "",
+    program: "",
+    nationality: "",
+    admissionType: "",
+    uniformRequired: "yes",
+    discountApplicable: "no",
     phone: "",
     email: "",
     course: "",
     batch: "",
     notes: "",
     documents: [] as string[],
+    fatherName: "",
+    motherName: "",
+    fatherMobile: "",
+    motherMobile: "",
+    fatherOccupation: "",
+    motherOccupation: "",
+    fatherEmail: "",
+    motherEmail: "",
+    fatherOrg: "",
+    motherOrg: "",
+    address: "",
+    postalCode: "",
+    city: "",
+    state: "",
+    country: "",
+    transportRequired: "no",
+    previousSchooling: "no",
+    kinAttended: "no",
+    siblings: "no",
   })
   const [activeTab, setActiveTab] = useState("all")
 
@@ -109,9 +138,17 @@ export default function AdmissionPage() {
       const newId = `ADM${Math.floor(1000 + Math.random() * 9000)}`
       const studentId = `STU${Math.floor(1000 + Math.random() * 9000)}`
       const date = new Date().toISOString().split("T")[0]
-      const body = { ...newAdmission, id: newId, studentId, date, status: "Pending", feeStatus: "Pending" }
+      const body = {
+        ...newAdmission,
+        id: newId,
+        studentId,
+        date,
+        status: "Pending",
+        feeStatus: "Pending",
+        course: newAdmission.program || newAdmission.course,
+      }
 
-      await fetch( `${API_BASE_URL}/api/admissions`, {
+      await fetch(`${API_BASE_URL}/api/admissions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -120,7 +157,7 @@ export default function AdmissionPage() {
 
       toast({ title: "Admission Added", description: `Created admission for ${newAdmission.name}` })
       setIsAddDialogOpen(false)
-      setNewAdmission({ name: "", phone: "", email: "", course: "", batch: "", notes: "", documents: [] })
+      handleResetForm()
       fetchAdmissions()
     } catch (err) {
       console.error(err)
@@ -208,75 +245,310 @@ export default function AdmissionPage() {
     setNewAdmission({ ...newAdmission, documents: docs })
   }
 
+  const handleResetForm = () => {
+    setNewAdmission({
+      academicYear: "",
+      admissionDate: "",
+      name: "",
+      dob: "",
+      gender: "",
+      program: "",
+      nationality: "",
+      admissionType: "",
+      uniformRequired: "yes",
+      discountApplicable: "no",
+      phone: "",
+      email: "",
+      course: "",
+      batch: "",
+      notes: "",
+      documents: [],
+      fatherName: "",
+      motherName: "",
+      fatherMobile: "",
+      motherMobile: "",
+      fatherOccupation: "",
+      motherOccupation: "",
+      fatherEmail: "",
+      motherEmail: "",
+      fatherOrg: "",
+      motherOrg: "",
+      address: "",
+      postalCode: "",
+      city: "",
+      state: "",
+      country: "",
+      transportRequired: "no",
+      previousSchooling: "no",
+      kinAttended: "no",
+      siblings: "no",
+    })
+  }
+
+  const summaryByProgram = admissionData.reduce<Record<string, number>>((acc, item) => {
+    const key = (item.program || item.course || "Other").toString()
+    acc[key] = (acc[key] || 0) + 1
+    return acc
+  }, {})
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Admission Management</h1>
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <UserPlus className="mr-2 h-4 w-4" /> New Admission
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>Add New Admission</DialogTitle>
-              <DialogDescription>
-                Enter the details of the new admission. Click save when you're done.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    value={newAdmission.name}
-                    onChange={(e) => setNewAdmission({ ...newAdmission, name: e.target.value })}
-                    placeholder="Enter full name"
-                  />
+        <h1 className="text-3xl font-bold tracking-tight">Create Admission</h1>
+        <Button onClick={() => setIsAddDialogOpen(true)}>
+          <UserPlus className="mr-2 h-4 w-4" /> Quick Add
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {Object.entries(summaryByProgram).map(([program, count]) => (
+          <Card key={program} className="border-emerald-100 bg-emerald-50/50">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">{program}</CardTitle>
+              <CardDescription className="text-sm">Total Enquiries</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-2xl font-semibold">{count}</div>
+                <div className="h-2 w-20 bg-emerald-100 rounded-full">
+                  <div className="h-2 bg-emerald-500 rounded-full" style={{ width: "80%" }} />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <Tabs defaultValue="create" className="space-y-4" onValueChange={handleTabChange}>
+        <TabsList>
+          <TabsTrigger value="create">Create Admission</TabsTrigger>
+          <TabsTrigger value="all">Admission List</TabsTrigger>
+          <TabsTrigger value="pending">Pending</TabsTrigger>
+          <TabsTrigger value="approved">Approved</TabsTrigger>
+          <TabsTrigger value="rejected">Rejected</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="create">
+          <Card>
+            <CardHeader>
+              <CardTitle>Admission Form</CardTitle>
+              <CardDescription>Redesigned to match the reference layout</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="rounded-md border bg-emerald-50 border-emerald-100 p-4">
+                <h3 className="text-lg font-semibold text-emerald-800 mb-4">Student Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label>Academic Year *</Label>
+                    <Select onValueChange={(v) => setNewAdmission({ ...newAdmission, academicYear: v })}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Academic Year" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Apr25-Mar26">Apr 25 - Mar 26</SelectItem>
+                        <SelectItem value="Apr24-Mar25">Apr 24 - Mar 25</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Admission Date *</Label>
+                    <Input
+                      type="month"
+                      value={newAdmission.admissionDate}
+                      onChange={(e) => setNewAdmission({ ...newAdmission, admissionDate: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Student Name *</Label>
+                    <Input
+                      placeholder="To be printed on the certificate"
+                      value={newAdmission.name}
+                      onChange={(e) => setNewAdmission({ ...newAdmission, name: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Date of Birth *</Label>
+                    <Input
+                      type="date"
+                      value={newAdmission.dob}
+                      onChange={(e) => setNewAdmission({ ...newAdmission, dob: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Gender *</Label>
+                    <RadioGroup
+                      className="flex flex-wrap gap-4"
+                      value={newAdmission.gender}
+                      onValueChange={(v) => setNewAdmission({ ...newAdmission, gender: v })}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="male" id="male" />
+                        <Label htmlFor="male">Boy</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="female" id="female" />
+                        <Label htmlFor="female">Girl</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Program Name *</Label>
+                    <Select onValueChange={(v) => setNewAdmission({ ...newAdmission, program: v })}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Program" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Play group">Play group</SelectItem>
+                        <SelectItem value="Nursery">Nursery</SelectItem>
+                        <SelectItem value="Euro Junior">Euro Junior</SelectItem>
+                        <SelectItem value="Euro Senior">Euro Senior</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Nationality</Label>
+                    <Input
+                      placeholder="Enter Nationality"
+                      value={newAdmission.nationality}
+                      onChange={(e) => setNewAdmission({ ...newAdmission, nationality: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Admission Type *</Label>
+                    <Select onValueChange={(v) => setNewAdmission({ ...newAdmission, admissionType: v })}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="online">Online</SelectItem>
+                        <SelectItem value="offline">Offline</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Is Uniform Required *</Label>
+                    <RadioGroup
+                      className="flex gap-4"
+                      value={newAdmission.uniformRequired}
+                      onValueChange={(v) => setNewAdmission({ ...newAdmission, uniformRequired: v })}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="yes" id="uniform-yes" />
+                        <Label htmlFor="uniform-yes">Yes</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="no" id="uniform-no" />
+                        <Label htmlFor="uniform-no">No</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Discount Applicable *</Label>
+                    <RadioGroup
+                      className="flex gap-4"
+                      value={newAdmission.discountApplicable}
+                      onValueChange={(v) => setNewAdmission({ ...newAdmission, discountApplicable: v })}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="yes" id="discount-yes" />
+                        <Label htmlFor="discount-yes">Yes</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="no" id="discount-no" />
+                        <Label htmlFor="discount-no">No</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-md border bg-emerald-50 border-emerald-100 p-4">
+                <h3 className="text-lg font-semibold text-emerald-800 mb-4">Parent Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
-                    id="phone"
-                    value={newAdmission.phone}
-                    onChange={(e) => setNewAdmission({ ...newAdmission, phone: e.target.value })}
-                    placeholder="Enter phone number"
+                    placeholder="Father Name"
+                    value={newAdmission.fatherName}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, fatherName: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Mother Name"
+                    value={newAdmission.motherName}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, motherName: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Father Mobile"
+                    value={newAdmission.fatherMobile}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, fatherMobile: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Mother Mobile"
+                    value={newAdmission.motherMobile}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, motherMobile: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Father Occupation"
+                    value={newAdmission.fatherOccupation}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, fatherOccupation: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Mother Occupation"
+                    value={newAdmission.motherOccupation}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, motherOccupation: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Father Email"
+                    value={newAdmission.fatherEmail}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, fatherEmail: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Mother Email"
+                    value={newAdmission.motherEmail}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, motherEmail: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Father Organisation Name"
+                    value={newAdmission.fatherOrg}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, fatherOrg: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Mother Organisation Name"
+                    value={newAdmission.motherOrg}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, motherOrg: e.target.value })}
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={newAdmission.email}
-                  onChange={(e) => setNewAdmission({ ...newAdmission, email: e.target.value })}
-                  placeholder="Enter email address"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="course">Course</Label>
-                  <Select onValueChange={(value) => setNewAdmission({ ...newAdmission, course: value })}>
-                    <SelectTrigger id="course">
-                      <SelectValue placeholder="Select course" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {courseOptions.map((course) => (
-                        <SelectItem key={course} value={course}>
-                          {course}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="batch">Batch</Label>
-                  <Select onValueChange={(value) => setNewAdmission({ ...newAdmission, batch: value })}>
-                    <SelectTrigger id="batch">
-                      <SelectValue placeholder="Select batch" />
+
+              <div className="rounded-md border bg-emerald-50 border-emerald-100 p-4">
+                <h3 className="text-lg font-semibold text-emerald-800 mb-4">Address & Batch</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    placeholder="Address *"
+                    value={newAdmission.address}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, address: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Postal Code *"
+                    value={newAdmission.postalCode}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, postalCode: e.target.value })}
+                  />
+                  <Input
+                    placeholder="City *"
+                    value={newAdmission.city}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, city: e.target.value })}
+                  />
+                  <Input
+                    placeholder="State *"
+                    value={newAdmission.state}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, state: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Country *"
+                    value={newAdmission.country}
+                    onChange={(e) => setNewAdmission({ ...newAdmission, country: e.target.value })}
+                  />
+                  <Select onValueChange={(v) => setNewAdmission({ ...newAdmission, batch: v })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Batch" />
                     </SelectTrigger>
                     <SelectContent>
                       {batchOptions.map((batch) => (
@@ -287,10 +559,81 @@ export default function AdmissionPage() {
                     </SelectContent>
                   </Select>
                 </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+                  <div className="space-y-2">
+                    <Label>Transport Required?</Label>
+                    <RadioGroup
+                      className="flex gap-4"
+                      value={newAdmission.transportRequired}
+                      onValueChange={(v) => setNewAdmission({ ...newAdmission, transportRequired: v })}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="yes" id="transport-yes" />
+                        <Label htmlFor="transport-yes">Yes</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="no" id="transport-no" />
+                        <Label htmlFor="transport-no">No</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Previous Schooling?</Label>
+                    <RadioGroup
+                      className="flex gap-4"
+                      value={newAdmission.previousSchooling}
+                      onValueChange={(v) => setNewAdmission({ ...newAdmission, previousSchooling: v })}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="yes" id="prev-yes" />
+                        <Label htmlFor="prev-yes">Yes</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="no" id="prev-no" />
+                        <Label htmlFor="prev-no">No</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Has kin attended EuroKids before?</Label>
+                    <RadioGroup
+                      className="flex gap-4"
+                      value={newAdmission.kinAttended}
+                      onValueChange={(v) => setNewAdmission({ ...newAdmission, kinAttended: v })}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="yes" id="kin-yes" />
+                        <Label htmlFor="kin-yes">Yes</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="no" id="kin-no" />
+                        <Label htmlFor="kin-no">No</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Does the child have siblings?</Label>
+                    <RadioGroup
+                      className="flex gap-4"
+                      value={newAdmission.siblings}
+                      onValueChange={(v) => setNewAdmission({ ...newAdmission, siblings: v })}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="yes" id="sib-yes" />
+                        <Label htmlFor="sib-yes">Yes</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="no" id="sib-no" />
+                        <Label htmlFor="sib-no">No</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                </div>
               </div>
+
               <div className="space-y-2">
                 <Label>Required Documents</Label>
-                <div className="grid grid-cols-2 gap-2 mt-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
                   {requiredDocuments.map((document) => (
                     <div key={document} className="flex items-center space-x-2">
                       <Checkbox
@@ -303,6 +646,7 @@ export default function AdmissionPage() {
                   ))}
                 </div>
               </div>
+
               <div className="space-y-2">
                 <Label htmlFor="notes">Additional Notes</Label>
                 <Textarea
@@ -313,44 +657,19 @@ export default function AdmissionPage() {
                   rows={3}
                 />
               </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleAddAdmission}>Save Admission</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
 
-      <Tabs defaultValue="all" className="space-y-4" onValueChange={handleTabChange}>
-        <TabsList>
-          <TabsTrigger value="all">All Admissions</TabsTrigger>
-          <TabsTrigger value="pending">Pending</TabsTrigger>
-          <TabsTrigger value="approved">Approved</TabsTrigger>
-          <TabsTrigger value="rejected">Rejected</TabsTrigger>
-        </TabsList>
-
-        <div className="flex items-center gap-4 mb-4">
-          <div className="flex-1 flex items-center gap-2">
-            <Input
-              placeholder="Search by name, ID, phone, email or course..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-md"
-            />
-            <Button variant="outline" onClick={handleSearch}>
-              <Search className="h-4 w-4 mr-2" /> Search
-            </Button>
-          </div>
-          <Button variant="outline">
-            <Filter className="h-4 w-4 mr-2" /> Filter
-          </Button>
-          <Button variant="outline">
-            <FileDown className="h-4 w-4 mr-2" /> Export
-          </Button>
-        </div>
+              <div className="flex flex-wrap gap-3">
+                <Button onClick={handleAddAdmission}>Confirm</Button>
+                <Button variant="secondary" onClick={handleResetForm}>
+                  <RefreshCcw className="h-4 w-4 mr-2" /> Reload
+                </Button>
+                <Button variant="outline" onClick={() => window.history.back()}>
+                  Back
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         <TabsContent value={activeTab} className="space-y-4">
           <Card>
@@ -367,11 +686,30 @@ export default function AdmissionPage() {
               <CardDescription>Manage all student admissions from this panel</CardDescription>
             </CardHeader>
             <CardContent>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="flex-1 flex items-center gap-2">
+                  <Input
+                    placeholder="Search by name, ID, phone, email or course..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="max-w-md"
+                  />
+                  <Button variant="outline" onClick={handleSearch}>
+                    <Search className="h-4 w-4 mr-2" /> Search
+                  </Button>
+                </div>
+                <Button variant="outline">
+                  <Filter className="h-4 w-4 mr-2" /> Filter
+                </Button>
+                <Button variant="outline">
+                  <FileDown className="h-4 w-4 mr-2" /> Export
+                </Button>
+              </div>
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>ID</TableHead>
-                    <TableHead>Student ID</TableHead>
+                    <TableHead> UID</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Phone</TableHead>
                     <TableHead>Email</TableHead>
@@ -384,8 +722,8 @@ export default function AdmissionPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredData.map((admission) => (
-                  <TableRow key={`${admission.studentId}-${admission.admissionId}`}>
-                <TableCell>{admission.admissionId}</TableCell>
+                    <TableRow key={`${admission.studentId}-${admission.admissionId}`}>
+                      <TableCell>{admission.admissionId}</TableCell>
                       <TableCell>{admission.studentId}</TableCell>
                       <TableCell>{admission.name}</TableCell>
                       <TableCell>{admission.phone}</TableCell>

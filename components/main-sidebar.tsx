@@ -276,7 +276,7 @@ export function MainSidebar() {
                 <AccordionItem value={item.title} className="border-none">
                   <AccordionTrigger
                     className={cn(
-                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-amber-100 hover:text-emerald-900 no-underline text-left",
+                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-amber-100 hover:text-emerald-900 no-underline text-left [&>svg]:rotate-0 [&>svg]:transition-none",
                     )}
                   >
                     <item.icon className="h-5 w-5 text-emerald-700" />
